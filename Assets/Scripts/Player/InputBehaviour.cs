@@ -1,0 +1,52 @@
+using System;
+using UnityEngine;
+
+namespace Player
+{
+    public class InputBehaviour : IInputCallback
+    {
+        float m_movePressTime = 0;
+        float m_turnTreshold;
+        float m_turnMinLength;
+
+        public InputBehaviour(float turnTreshold, float turnMinLength)
+        {
+            m_turnTreshold = turnTreshold;
+            m_movePressTime = m_turnTreshold;
+            m_turnMinLength = turnMinLength;
+        }
+
+        public event Action OnHold;
+        public event Action OnTap;
+        public event Action<Vector3> OnSwipe;
+
+        public void OnUpdate()
+        {
+            var tc = Input.touchCount;
+            if (tc == 0)
+                return;
+
+            var t = Input.GetTouch(0);
+
+            if (t.phase == TouchPhase.Stationary)
+            {
+                if (m_movePressTime > 0)
+                    m_movePressTime -= Time.deltaTime;
+                OnHold?.Invoke();
+            }
+            else if (t.phase == TouchPhase.Moved)
+            {
+                var tdir = t.deltaPosition.normalized;
+                if (m_movePressTime > 0 || MathF.Abs(tdir.x) < m_turnMinLength)
+                    return;
+                m_movePressTime = m_turnTreshold;
+                OnSwipe?.Invoke(tdir);
+            }
+            else if (t.phase == TouchPhase.Began)
+            {
+                OnTap?.Invoke();
+            }
+        }
+    }
+}
+

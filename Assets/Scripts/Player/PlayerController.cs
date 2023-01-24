@@ -1,157 +1,69 @@
-using System;
 using UnityEngine;
-using System.Collections;
 
-public interface IInputCallback
+namespace Player
 {
-    public event Action OnMove;
-    public event Action<Vector3> OnTurn;
-}
 
-public class InputBehaviour : IInputCallback
-{
-    float m_movePressTime = 0;
-    float m_turnTreshold;
-    float m_turnMinLength;
-
-    public InputBehaviour(float turnTreshold, float turnMinLength)
+    public interface IDamagable
     {
-        m_turnTreshold = turnTreshold;
-        m_movePressTime = m_turnTreshold;
-        m_turnMinLength = turnMinLength;
+        public void Crash(Transform obstacle);
     }
 
-    public event Action OnMove;
-    public event Action<Vector3> OnTurn;
-
-    public void OnUpdate()
+    public class DamageBehaviour : IDamagable
     {
-        var tc = Input.touchCount;
-        if (tc == 0)
-            return;
+        Transform m_player;
+        float m_respawnPosDis;
+        MovementBehaviour m_movementBehaviour;
 
-        var t = Input.GetTouch(0);
-
-        if (t.phase == TouchPhase.Stationary)
+        public DamageBehaviour(Transform player, float respawnPosDis, MovementBehaviour movementBehaviour)
         {
-            if (m_movePressTime > 0)
-                m_movePressTime -= Time.deltaTime;
-            OnMove?.Invoke();
+            m_player = player;
+            m_respawnPosDis = respawnPosDis;
+            m_movementBehaviour = movementBehaviour;
         }
-        else if (t.phase == TouchPhase.Moved)
+
+        public void Crash(Transform obstacle)
         {
-            var tdir = t.deltaPosition.normalized;
-            if (m_movePressTime > 0 || MathF.Abs(tdir.x) < m_turnMinLength)
-                return;
-            m_movePressTime = m_turnTreshold;
-            OnTurn?.Invoke(tdir);
-        }
-    }
-}
+            var pos = new Vector3(m_player.position.x, m_player.position.y, m_player.position.z * m_respawnPosDis);
+            m_player.transform.position = pos;
+            m_movementBehaviour.IsPlaying = true;
 
-public class MovementBehaviour
-{
-    public enum Pos
-    {
-        LEFT,
-        CENTER,
-        RIGHT
-    }
-
-    Transform m_player;
-    MonoBehaviour m_mono;
-    Coroutine m_currentState;
-    IInputCallback m_inputCallback;
-    Pos m_currentPost = Pos.CENTER;
-
-    float m_speed;
-    float m_turnRange;
-    float m_turnSpeed;
-
-    public MovementBehaviour(
-        Transform player,
-        IInputCallback inputCallback,
-        float speed,
-        float turnSpeed,
-        float turnRange)
-    {
-        m_player = player;
-        m_mono = player.GetComponent<MonoBehaviour>();
-        m_inputCallback = inputCallback;
-        m_speed = speed;
-        m_turnSpeed = turnSpeed;
-
-        m_inputCallback.OnMove += MoveForward;
-        m_inputCallback.OnTurn += Turn;
-        m_turnRange = turnRange;
-    }
-
-    void MoveForward()
-    {
-        m_player.Translate((m_player.forward * m_speed) * Time.deltaTime, Space.World);
-    }
-
-    void Turn(Vector3 input)
-    {
-        var nextPos = (input.x < 0 ? Pos.LEFT : Pos.RIGHT);
-
-        if (nextPos == Pos.RIGHT && m_currentPost != Pos.RIGHT)
-        {
-            m_currentPost = m_currentPost == Pos.CENTER ? Pos.RIGHT : Pos.CENTER;
-            m_mono.StartCoroutine(Turning(m_turnRange));
-        }
-        else if (nextPos == Pos.LEFT && m_currentPost != Pos.LEFT)
-        {
-            m_currentPost = m_currentPost == Pos.CENTER ? Pos.LEFT : Pos.CENTER;
-            m_mono.StartCoroutine(Turning(-m_turnRange));
         }
     }
 
-    IEnumerator Turning(float range)
+    public class PlayerController : MonoBehaviour
     {
-        var dis = 0f;
-        var lastPos = m_player.position.x;
-        while (dis < MathF.Abs(range))
+        public InputBehaviour InputBehaviour;
+        public MovementBehaviour MovementBehaviour;
+        public DamageBehaviour DamageBehaviour { get; private set; }
+
+        [Header("Input Setting")]
+        [SerializeField]
+        float m_turnTreshold;
+        [SerializeField]
+        float m_turnMinLength;
+
+        [Header("Movement Setting")]
+        [SerializeField]
+        float m_speed;
+        [SerializeField]
+        float m_turnSpeed;
+        [SerializeField]
+        float m_turnRange;
+
+        [Header("Damage Setting")]
+        [SerializeField]
+        float m_respawnPosDis;
+
+        void Start()
         {
-            dis += MathF.Abs(m_player.position.x - lastPos);
-            var dir = Vector3.Lerp(
-                m_player.position,
-               m_player.position + (m_player.right * range),
-                m_turnSpeed
-            );
-            m_player.position = dir;
-            yield return null;
+            InputBehaviour = new(m_turnTreshold, m_turnMinLength);
+            MovementBehaviour = new(transform, InputBehaviour, m_speed, m_turnSpeed, m_turnRange);
+            DamageBehaviour = new(transform, m_respawnPosDis, MovementBehaviour);
         }
-    }
-}
 
-public class PlayerController : MonoBehaviour
-{
-    InputBehaviour m_inputBehaviour;
-    MovementBehaviour m_movementBehaviour;
-
-    [Header("Input Setting")]
-    [SerializeField]
-    float m_turnTreshold;
-    [SerializeField]
-    float m_turnMinLength;
-
-    [Header("Movement Setting")]
-    [SerializeField]
-    float m_speed;
-    [SerializeField]
-    float m_turnSpeed;
-    [SerializeField]
-    float m_turnRange;
-
-    void Start()
-    {
-        m_inputBehaviour = new(m_turnTreshold, m_turnMinLength);
-        m_movementBehaviour = new(transform, m_inputBehaviour, m_speed, m_turnSpeed, m_turnRange);
-    }
-
-    void Update()
-    {
-        m_inputBehaviour.OnUpdate();
+        void Update()
+        {
+            InputBehaviour.OnUpdate();
+        }
     }
 }
