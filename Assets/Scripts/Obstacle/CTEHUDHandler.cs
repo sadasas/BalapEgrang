@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Obstacle
 {
-    public class CTEHandler : MonoBehaviour
+    public class CTEHUDHandler : MonoBehaviour
     {
         IInputCallback m_inputCallback;
         bool m_isStop = false;
@@ -17,19 +17,26 @@ namespace Obstacle
         [SerializeField] RectTransform m_bar;
 
         public GameObject Obstacle { get; set; }
-        public GameObject Player { get; set; }
+        GameObject m_player;
 
-        void Start()
-        {
-
-            m_inputCallback ??= GameObject.FindWithTag("Player").GetComponent<PlayerController>().InputBehaviour;
-            m_inputCallback.OnTap += CheckMatch;
-        }
+     
 
         void OnEnable()
         {
+          
             m_isStop = false;
 
+        }
+        private void OnDisable()
+        {
+            if (m_inputCallback != null) m_inputCallback.OnTap -= CheckMatch;
+        }
+
+        public void SetPlayer(GameObject player)
+        {
+            m_player = player;
+            m_inputCallback ??= m_player.GetComponent<PlayerController>().InputBehaviour;
+            m_inputCallback.OnTap += CheckMatch;
         }
         public void PlayCTE()
         {
@@ -42,11 +49,13 @@ namespace Obstacle
             m_isStop = true;
             if (IsRectOverlaps(m_bar, m_hitBox))
             {
-                Player.GetComponent<PlayerController>().MovementBehaviour.IsPlaying = true;
+                m_player.GetComponent<PlayerController>().MovementBehaviour.IsPlaying = true;
+                m_player.GetComponent<PlayerController>().AbilityBehaviour.IncreaseSpeed();
+
             }
             else
             {
-                Player.GetComponent<PlayerController>().DamageBehaviour.Crash(Obstacle.transform);
+                m_player.GetComponent<PlayerController>().DamageBehaviour.Crash(Obstacle.transform);
 
             }
 
@@ -55,7 +64,7 @@ namespace Obstacle
 
         IEnumerator randomingBar()
         {
-            Player.GetComponent<PlayerController>().MovementBehaviour.IsPlaying = false;
+            m_player.GetComponent<PlayerController>().MovementBehaviour.IsPlaying = false;
             var countDown = m_time;
             var increment = m_increment;
             while (countDown > 0f && m_isStop == false)
@@ -67,7 +76,7 @@ namespace Obstacle
                 yield return null;
 
             }
-            Player.GetComponent<PlayerController>().DamageBehaviour.Crash(Obstacle.transform);
+            m_player.GetComponent<PlayerController>().DamageBehaviour.Crash(Obstacle.transform);
             gameObject.SetActive(false);
         }
 

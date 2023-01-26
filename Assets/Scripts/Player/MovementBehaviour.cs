@@ -1,28 +1,29 @@
 using System;
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 namespace Player
 {
+    public enum Pos
+    {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
     public class MovementBehaviour
     {
-        public enum Pos
-        {
-            LEFT,
-            CENTER,
-            RIGHT
-        }
+
 
         Transform m_player;
         MonoBehaviour m_mono;
         Coroutine m_currentState;
         IInputCallback m_inputCallback;
-        Pos m_currentPost = Pos.CENTER;
 
         float m_speed;
         float m_turnRange;
         float m_turnSpeed;
 
+        public Pos CurrentPost = Pos.CENTER;
         public bool IsPlaying = true;
 
         public MovementBehaviour(
@@ -43,6 +44,15 @@ namespace Player
             m_turnRange = turnRange;
         }
 
+        public void IncreaseSpeed(int speed)
+        {
+            m_speed = m_speed * speed;
+        }
+
+        public void DecreaseSpeed(int speed)
+        {
+            m_speed = m_speed / speed;
+        }
         void MoveForward()
         {
             if (!IsPlaying) return;
@@ -54,14 +64,14 @@ namespace Player
             if (!IsPlaying) return;
             var nextPos = (input.x < 0 ? Pos.LEFT : Pos.RIGHT);
 
-            if (nextPos == Pos.RIGHT && m_currentPost != Pos.RIGHT)
+            if (nextPos == Pos.RIGHT && CurrentPost != Pos.RIGHT)
             {
-                m_currentPost = m_currentPost == Pos.CENTER ? Pos.RIGHT : Pos.CENTER;
+                CurrentPost = CurrentPost == Pos.CENTER ? Pos.RIGHT : Pos.CENTER;
                 m_mono.StartCoroutine(Turning(m_turnRange));
             }
-            else if (nextPos == Pos.LEFT && m_currentPost != Pos.LEFT)
+            else if (nextPos == Pos.LEFT && CurrentPost != Pos.LEFT)
             {
-                m_currentPost = m_currentPost == Pos.CENTER ? Pos.LEFT : Pos.CENTER;
+                CurrentPost = CurrentPost == Pos.CENTER ? Pos.LEFT : Pos.CENTER;
                 m_mono.StartCoroutine(Turning(-m_turnRange));
             }
         }

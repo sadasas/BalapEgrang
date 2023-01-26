@@ -37,7 +37,8 @@ namespace Player
             else if (t.phase == TouchPhase.Moved)
             {
                 var tdir = t.deltaPosition.normalized;
-                if (m_movePressTime > 0 || MathF.Abs(tdir.x) < m_turnMinLength)
+              
+                if (m_movePressTime > 0 || MathF.Abs(tdir.x) < m_turnMinLength|| MathF.Abs(tdir.y)> 0.3)
                     return;
                 m_movePressTime = m_turnTreshold;
                 OnSwipe?.Invoke(tdir);

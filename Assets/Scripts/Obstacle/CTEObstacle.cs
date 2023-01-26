@@ -1,3 +1,4 @@
+using UI;
 using UnityEngine;
 
 namespace Obstacle
@@ -11,9 +12,9 @@ namespace Obstacle
             if (other.CompareTag("Player"))
             {
                 UIManager.s_this.ForceHUD(HUDType.CTE);
-                var cteHandler = UIManager.s_this.GetHUD(HUDType.CTE).GetComponent<CTEHandler>();
+                var cteHandler = UIManager.s_this.GetHUD(HUDType.CTE).GetComponent<CTEHUDHandler>();
                 cteHandler.Obstacle = this.gameObject;
-                cteHandler.Player = other.gameObject;
+                cteHandler.SetPlayer(other.gameObject);
                 cteHandler.PlayCTE();
 
 

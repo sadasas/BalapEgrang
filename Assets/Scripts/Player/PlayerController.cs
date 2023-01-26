@@ -1,39 +1,14 @@
+using Race;
 using UnityEngine;
 
 namespace Player
 {
 
-    public interface IDamagable
-    {
-        public void Crash(Transform obstacle);
-    }
-
-    public class DamageBehaviour : IDamagable
-    {
-        Transform m_player;
-        float m_respawnPosDis;
-        MovementBehaviour m_movementBehaviour;
-
-        public DamageBehaviour(Transform player, float respawnPosDis, MovementBehaviour movementBehaviour)
-        {
-            m_player = player;
-            m_respawnPosDis = respawnPosDis;
-            m_movementBehaviour = movementBehaviour;
-        }
-
-        public void Crash(Transform obstacle)
-        {
-            var pos = new Vector3(m_player.position.x, m_player.position.y, m_player.position.z * m_respawnPosDis);
-            m_player.transform.position = pos;
-            m_movementBehaviour.IsPlaying = true;
-
-        }
-    }
-
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IRacer
     {
         public InputBehaviour InputBehaviour;
         public MovementBehaviour MovementBehaviour;
+        public AbilityBehaviour AbilityBehaviour;
         public DamageBehaviour DamageBehaviour { get; private set; }
 
         [Header("Input Setting")]
@@ -54,16 +29,39 @@ namespace Player
         [SerializeField]
         float m_respawnPosDis;
 
+        [Header("Ability Setting")]
+        [SerializeField]
+        int m_maxPushVal;
+        [SerializeField]
+        int m_abilityTime;
         void Start()
         {
             InputBehaviour = new(m_turnTreshold, m_turnMinLength);
             MovementBehaviour = new(transform, InputBehaviour, m_speed, m_turnSpeed, m_turnRange);
             DamageBehaviour = new(transform, m_respawnPosDis, MovementBehaviour);
+            AbilityBehaviour = new(m_maxPushVal,this, m_abilityTime, MovementBehaviour);
         }
 
         void Update()
         {
             InputBehaviour.OnUpdate();
+        }
+
+        public void WaitStart(Pos currentPos)
+        {
+            MovementBehaviour.IsPlaying = false;
+            MovementBehaviour.CurrentPost = currentPos;
+        }
+
+        public void StartRace()
+        {
+            MovementBehaviour.IsPlaying = true;
+        }
+
+        public void FinishRace()
+        {
+            MovementBehaviour.IsPlaying = false;
+            Debug.Log("finis");
         }
     }
 }

@@ -10,12 +10,12 @@ public class CameraController : MonoBehaviour
 
     [SerializeField] float m_smoothDamp;
 
-    public Transform Player;
+    public Transform Player { get; set; }
 
 
     void LateUpdate()
     {
-        TrackPlayer();
+       if(Player) TrackPlayer();
 
     }
     void TrackPlayer()
