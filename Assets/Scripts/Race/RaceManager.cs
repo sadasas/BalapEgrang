@@ -5,26 +5,43 @@ using UnityEngine;
 
 namespace Race
 {
-
-    public interface IRacer
-    {
-        public void WaitStart(Pos currentPos);
-        public void StartRace();
-        public void FinishRace();
-    }
     public enum RaceState
     {
         STARTING,
         PLAYING,
         FINISHED,
     }
+
+    public struct PlayerDataRace
+    {
+
+        public float Time;
+        public int Rank;
+        public int Respawned;
+        public PlayerDataRace(float time, int rank) : this()
+        {
+            Time = time;
+            Rank = rank;
+
+        }
+
+        public override string ToString()
+        {
+            return $"{Time} {Rank} {Respawned}";
+        }
+
+
+    }
     public class RaceManager : MonoBehaviour
     {
         public static RaceManager s_Instance;
         public const int maxRacers = 1;
 
-        RaceState m_state = RaceState.STARTING;
-        List<GameObject> m_racers;
+        static float s_Timer = 0;
+        static int s_racerfinisheds = 0;
+        static RaceState m_state = RaceState.STARTING;
+
+        Dictionary<GameObject, PlayerDataRace> m_racers;
         Transform[] m_startPos;
 
 
@@ -42,24 +59,37 @@ namespace Race
         {
             if (m_state == RaceState.PLAYING)
             {
+                s_Timer += Time.deltaTime;
                 foreach (var racer in m_racers)
                 {
-                    var dis = TrackRacer(racer);
+                    var dis = TrackRacer(racer.Key);
 
                 }
             }
         }
 
 
+        public void RacerCrashed(GameObject racer)
+        {
+            var data = m_racers[racer];
+            data.Respawned++;
+
+            m_racers[racer] = data;
+
+            Debug.Log(m_racers[racer].Respawned);
+        }
         public void RacerFinished(GameObject racerFinished)
         {
-            foreach (var racer in m_racers)
-            {
-                if (racer == racerFinished)
-                {
-                    racer.GetComponent<IRacer>().FinishRace();
-                }
-            }
+
+            s_racerfinisheds++;
+            racerFinished.GetComponent<IRacer>().FinishRace();
+            var data = m_racers[racerFinished];
+            data.Rank = s_racerfinisheds;
+            data.Time = s_Timer;
+            m_racers[racerFinished] = data;
+
+            if (s_racerfinisheds == maxRacers) RaceFinished();
+
         }
         public void RegisterRacer(GameObject newRacer)
         {
@@ -70,7 +100,7 @@ namespace Race
             newRacer.transform.position = new Vector3(m_startPos[id].position.x, heigth, m_startPos[id].position.z);
             var racer = newRacer.GetComponent<IRacer>();
 
-            m_racers.Add(newRacer);
+            m_racers.Add(newRacer, default);
 
             var pos = id == 0 ? Pos.LEFT : (id == 1 ? Pos.CENTER : Pos.RIGHT);
             racer.WaitStart(pos);
@@ -95,8 +125,18 @@ namespace Race
             foreach (var racer in m_racers)
             {
 
-                racer.GetComponent<IRacer>().StartRace();
+                racer.Key.GetComponent<IRacer>().StartRace();
             }
+        }
+
+        void RaceFinished()
+        {
+            m_state = RaceState.FINISHED;
+            foreach (var racer in m_racers)
+            {
+                Debug.Log(racer.Value.ToString());
+            }
+
         }
         bool IsAllRacerReady()
         {

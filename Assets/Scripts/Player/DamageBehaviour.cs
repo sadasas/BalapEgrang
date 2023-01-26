@@ -17,7 +17,7 @@ namespace Player
 
         public void Crash(Transform obstacle)
         {
-            var pos = new Vector3(m_player.position.x, m_player.position.y, m_player.position.z * m_respawnPosDis);
+            var pos = new Vector3(m_player.position.x, m_player.position.y, obstacle.position.z + m_respawnPosDis);
             m_player.transform.position = pos;
             m_movementBehaviour.IsPlaying = true;
 

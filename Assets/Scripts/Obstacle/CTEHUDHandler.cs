@@ -1,4 +1,5 @@
 using Player;
+using Race;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ namespace Obstacle
     {
         IInputCallback m_inputCallback;
         bool m_isStop = false;
+        GameObject m_player;
 
         [SerializeField] Slider m_slider;
         [SerializeField] float m_time;
@@ -17,13 +19,12 @@ namespace Obstacle
         [SerializeField] RectTransform m_bar;
 
         public GameObject Obstacle { get; set; }
-        GameObject m_player;
 
-     
+
 
         void OnEnable()
         {
-          
+
             m_isStop = false;
 
         }
@@ -55,13 +56,18 @@ namespace Obstacle
             }
             else
             {
-                m_player.GetComponent<PlayerController>().DamageBehaviour.Crash(Obstacle.transform);
+                FailMatching();
 
             }
 
             gameObject.SetActive(false);
         }
 
+        void FailMatching()
+        {
+            m_player.GetComponent<PlayerController>().DamageBehaviour.Crash(Obstacle.transform);
+            RaceManager.s_Instance.RacerCrashed(m_player);
+        }
         IEnumerator randomingBar()
         {
             m_player.GetComponent<PlayerController>().MovementBehaviour.IsPlaying = false;
@@ -76,7 +82,7 @@ namespace Obstacle
                 yield return null;
 
             }
-            m_player.GetComponent<PlayerController>().DamageBehaviour.Crash(Obstacle.transform);
+            FailMatching();
             gameObject.SetActive(false);
         }
 

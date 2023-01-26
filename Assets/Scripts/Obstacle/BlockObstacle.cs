@@ -1,4 +1,5 @@
 using Player;
+using Race;
 using UnityEngine;
 
 public class BlockObstacle : MonoBehaviour
@@ -11,6 +12,7 @@ public class BlockObstacle : MonoBehaviour
         {
             var player = other.GetComponent<PlayerController>().DamageBehaviour;
             player.Crash(transform);
+            RaceManager.s_Instance.RacerCrashed(other.gameObject);
         }
     }
 
