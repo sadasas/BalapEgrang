@@ -1,3 +1,4 @@
+using Enemy;
 using UI;
 using UnityEngine;
 
@@ -18,6 +19,11 @@ namespace Obstacle
                 cteHandler.PlayCTE();
 
 
+            }
+            else if(other.CompareTag("Enemy"))
+            {
+                var cteHandler = other.GetComponent<EnemyController>();
+                cteHandler.OnCTETriggered(gameObject);
             }
         }
 

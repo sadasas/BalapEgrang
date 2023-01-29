@@ -35,7 +35,7 @@ namespace Race
     public class RaceManager : MonoBehaviour
     {
         public static RaceManager s_Instance;
-        public const int maxRacers = 1;
+        public const int maxRacers = 3;
 
         static float s_Timer = 0;
         static int s_racerfinisheds = 0;
@@ -71,12 +71,13 @@ namespace Race
 
         public void RacerCrashed(GameObject racer)
         {
+            if (m_state != RaceState.PLAYING) return;
             var data = m_racers[racer];
             data.Respawned++;
 
             m_racers[racer] = data;
 
-            Debug.Log(m_racers[racer].Respawned);
+
         }
         public void RacerFinished(GameObject racerFinished)
         {

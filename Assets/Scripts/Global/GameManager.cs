@@ -1,12 +1,13 @@
-﻿using Player;
+﻿using Enemy;
+using Player;
 using Race;
 using System.Collections;
 using UI;
 using UnityEngine;
 
-public class GameManager:MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-  public  enum GameState
+    public enum GameState
     {
         MAINMENU,
         PLAYING,
@@ -17,10 +18,12 @@ public class GameManager:MonoBehaviour
     PlayerManager m_playerManager;
     UIManager m_UIManager;
     RaceManager m_RaceManager;
+    EnemyManager m_EnemyManager;
 
     [SerializeField] GameObject m_playerManagerPrefab;
     [SerializeField] GameObject m_UIManagerPrefab;
     [SerializeField] GameObject m_raceManagerPrefab;
+    [SerializeField] GameObject m_enemyManagerPrefab;
 
 
 
@@ -32,13 +35,15 @@ public class GameManager:MonoBehaviour
     {
         m_UIManager = Instantiate(m_UIManagerPrefab).GetComponent<UIManager>();
         m_playerManager = Instantiate(m_playerManagerPrefab).GetComponent<PlayerManager>();
+        m_EnemyManager = Instantiate(m_enemyManagerPrefab).GetComponent<EnemyManager>();
 
-        if (s_GameState == GameState.PLAYING) StartCoroutine( StartGame());
+        if (s_GameState == GameState.PLAYING) StartCoroutine(StartGame());
     }
     IEnumerator StartGame()
     {
         m_RaceManager = Instantiate(m_raceManagerPrefab).GetComponent<RaceManager>();
         yield return null;
         m_playerManager.SpawnPlayablePlayer();
+        m_EnemyManager.SpawnPlayableEnemy();
     }
 }
