@@ -88,7 +88,7 @@ namespace Race
             data.Rank = s_racerfinisheds;
             data.Time = s_Timer;
             m_racers[racerFinished] = data;
-
+            Debug.Log(m_racers[racerFinished].ToString());
             if (s_racerfinisheds == maxRacers) RaceFinished();
 
         }
@@ -132,6 +132,7 @@ namespace Race
 
         void RaceFinished()
         {
+            
             m_state = RaceState.FINISHED;
             foreach (var racer in m_racers)
             {

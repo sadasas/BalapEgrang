@@ -131,13 +131,12 @@ MonoBehaviour:
   m_speed: 1.5
   m_respawnDelay: 3
   m_respawnPosDis: 1
-  m_raycastLength: 2
+  m_turnSpeed: 0.2
+  m_turnRange: 3
+  m_rayLength: 2
   m_obstacleLayer:
     serializedVersion: 2
     m_Bits: 64
-  m_turnSpeed: 0.2
-  m_turnRange: 3
   m_timeFaster: 2
-  m_speedIncrease: 1
+  m_speedIncrease: 2
   Brain: {fileID: 11400000, guid: 7c3c289c3cfca9a41958111ef18236ab, type: 2}
-  CurrentPost: 1

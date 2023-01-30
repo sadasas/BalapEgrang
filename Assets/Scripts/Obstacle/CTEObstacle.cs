@@ -22,7 +22,7 @@ namespace Obstacle
             }
             else if(other.CompareTag("Enemy"))
             {
-                var cteHandler = other.GetComponent<EnemyController>();
+                var cteHandler = other.GetComponent<AIController>();
                 cteHandler.OnCTETriggered(gameObject);
             }
         }

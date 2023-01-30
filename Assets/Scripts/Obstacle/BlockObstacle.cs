@@ -22,8 +22,8 @@ public class BlockObstacle : MonoBehaviour
         }
         else if(other.CompareTag("Enemy"))
         {
-            var enemy = other.transform.GetComponent<EnemyController>();
-            enemy.Crashed(gameObject);
+            var enemy = other.transform.GetComponent<AIController>().DamageBehaviour;
+            enemy.Crash(gameObject);
             RaceManager.s_Instance.RacerCrashed(other.gameObject);
         }
     }

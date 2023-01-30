@@ -3,7 +3,7 @@
 namespace Enemy
 {
     [CreateAssetMenu(fileName ="Enemy",menuName ="Enemy")]
-    public class EnemyLevel :ScriptableObject
+    public class AILevel :ScriptableObject
     {
         public int DecisionVarian;
         public float DecisionMinCost;

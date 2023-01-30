@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Enemy
 {
 
-    public enum EnemyState
+    public enum AIState
     {
         IDLE,
         MOVING,
@@ -18,7 +18,7 @@ namespace Enemy
     public class EnemyManager : MonoBehaviour
     {
         const int max_EnemySpawned = 2;
-        List<EnemyController> m_enemys;
+        List<AIController> m_enemys;
         [SerializeField] GameObject m_playableEnemy;
 
         private void Start()
@@ -29,7 +29,7 @@ namespace Enemy
         {
             for (int i = 0; i < max_EnemySpawned; i++)
             {
-                var enemy = Instantiate(m_playableEnemy).GetComponent<EnemyController>();
+                var enemy = Instantiate(m_playableEnemy).GetComponent<AIController>();
                 m_enemys.Add(enemy);
                 RaceManager.s_Instance.RegisterRacer(enemy.gameObject);
             }
