@@ -19,6 +19,7 @@ namespace Player
         public event Action OnHold;
         public event Action OnTap;
         public event Action<Vector3> OnSwipe;
+        public event Action OnRelease;
 
         public void OnUpdate()
         {
@@ -37,8 +38,8 @@ namespace Player
             else if (t.phase == TouchPhase.Moved)
             {
                 var tdir = t.deltaPosition.normalized;
-              
-                if (m_movePressTime > 0 || MathF.Abs(tdir.x) < m_turnMinLength|| MathF.Abs(tdir.y)> 0.3)
+
+                if (m_movePressTime > 0 || MathF.Abs(tdir.x) < m_turnMinLength || MathF.Abs(tdir.y) > 0.3)
                     return;
                 m_movePressTime = m_turnTreshold;
                 OnSwipe?.Invoke(tdir);
@@ -46,6 +47,10 @@ namespace Player
             else if (t.phase == TouchPhase.Began)
             {
                 OnTap?.Invoke();
+            }
+            else if (t.phase == TouchPhase.Ended)
+            {
+                OnRelease?.Invoke();
             }
         }
     }

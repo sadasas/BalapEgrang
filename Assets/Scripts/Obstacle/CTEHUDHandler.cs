@@ -50,7 +50,7 @@ namespace Obstacle
             m_isStop = true;
             if (IsRectOverlaps(m_bar, m_hitBox))
             {
-                m_player.GetComponent<PlayerController>().MovementBehaviour.IsPlaying = true;
+                m_player.GetComponent<PlayerController>().MovementBehaviour.IsMoveAllowed = true;
                 m_player.GetComponent<PlayerController>().AbilityBehaviour.IncreaseSpeed();
 
             }
@@ -70,7 +70,7 @@ namespace Obstacle
         }
         IEnumerator randomingBar()
         {
-            m_player.GetComponent<PlayerController>().MovementBehaviour.IsPlaying = false;
+            m_player.GetComponent<PlayerController>().MovementBehaviour.IsMoveAllowed = false;
             var countDown = m_time;
             var increment = m_increment;
             while (countDown > 0f && m_isStop == false)

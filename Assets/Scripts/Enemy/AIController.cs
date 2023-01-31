@@ -29,7 +29,7 @@ namespace Enemy
         [SerializeField] float m_rayLength;
         [SerializeField] LayerMask m_obstacleLayer;
 
-        [Header("Ability Setting")]
+        [Header("Ability Setting")]    
         [SerializeField] float m_timeFaster;
         [SerializeField] float m_speedIncrease;
 

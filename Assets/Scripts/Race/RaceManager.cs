@@ -39,10 +39,12 @@ namespace Race
 
         static float s_Timer = 0;
         static int s_racerfinisheds = 0;
-        static RaceState m_state = RaceState.STARTING;
 
         Dictionary<GameObject, PlayerDataRace> m_racers;
         Transform[] m_startPos;
+
+        public static RaceState s_State { get; private set; } = RaceState.STARTING;
+
 
 
         private void Awake()
@@ -57,7 +59,7 @@ namespace Race
 
         private void Update()
         {
-            if (m_state == RaceState.PLAYING)
+            if (s_State == RaceState.PLAYING)
             {
                 s_Timer += Time.deltaTime;
                 foreach (var racer in m_racers)
@@ -71,7 +73,7 @@ namespace Race
 
         public void RacerCrashed(GameObject racer)
         {
-            if (m_state != RaceState.PLAYING) return;
+            if (s_State != RaceState.PLAYING) return;
             var data = m_racers[racer];
             data.Respawned++;
 
@@ -122,7 +124,7 @@ namespace Race
         }
         void StartRace()
         {
-            m_state = RaceState.PLAYING;
+            s_State = RaceState.PLAYING;
             foreach (var racer in m_racers)
             {
 
@@ -132,8 +134,8 @@ namespace Race
 
         void RaceFinished()
         {
-            
-            m_state = RaceState.FINISHED;
+
+            s_State = RaceState.FINISHED;
             foreach (var racer in m_racers)
             {
                 Debug.Log(racer.Value.ToString());

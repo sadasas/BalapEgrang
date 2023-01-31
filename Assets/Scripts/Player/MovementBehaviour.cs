@@ -10,28 +10,33 @@ namespace Player
         CENTER,
         RIGHT
     }
+
     public class MovementBehaviour
     {
-
-
+        PlayerDataState m_dataState;
+        PlayerAnimationBehaviour m_animationBehaviour;
         Transform m_player;
         MonoBehaviour m_mono;
-        Coroutine m_currentState;
+        Coroutine m_coroutine;
         IInputCallback m_inputCallback;
 
         float m_speed;
         float m_turnRange;
         float m_turnSpeed;
 
-        public Pos CurrentPost = Pos.CENTER;
-        public bool IsPlaying = true;
+        public bool IsMoveAllowed = true;
+
+
 
         public MovementBehaviour(
             Transform player,
             IInputCallback inputCallback,
             float speed,
             float turnSpeed,
-            float turnRange)
+            float turnRange,
+            PlayerAnimationBehaviour animationBehaviour,
+
+            PlayerDataState dataState)
         {
             m_player = player;
             m_mono = player.GetComponent<MonoBehaviour>();
@@ -41,43 +46,64 @@ namespace Player
 
             m_inputCallback.OnHold += MoveForward;
             m_inputCallback.OnSwipe += Turn;
+            m_inputCallback.OnRelease += Idle;
             m_turnRange = turnRange;
+            m_animationBehaviour = animationBehaviour;
+            m_dataState = dataState;
         }
 
+        public void Update()
+        {
+            if (m_dataState.State == PlayerState.IDLE) Idle();
+        }
         public void IncreaseSpeed(int speed)
         {
+            m_animationBehaviour.Faster();
             m_speed = m_speed * speed;
         }
 
         public void DecreaseSpeed(int speed)
         {
+            m_animationBehaviour.ResetSpeed();
             m_speed = m_speed / speed;
         }
+
+        public void Idle()
+        {
+            m_dataState.State = PlayerState.IDLE;
+            m_animationBehaviour.Idle();
+        }
+
         void MoveForward()
         {
-            if (!IsPlaying) return;
+            if (!IsMoveAllowed) return;
+            m_dataState.State = PlayerState.WALKING;
+            m_animationBehaviour.Walk();
             m_player.Translate((m_player.forward * m_speed) * Time.deltaTime, Space.World);
         }
 
+
         void Turn(Vector3 input)
         {
-            if (!IsPlaying) return;
+            if (!IsMoveAllowed) return;
+            m_dataState.State = PlayerState.TURNING;
             var nextPos = (input.x < 0 ? Pos.LEFT : Pos.RIGHT);
 
-            if (nextPos == Pos.RIGHT && CurrentPost != Pos.RIGHT)
+            if (nextPos == Pos.RIGHT && m_dataState.CurrentPost != Pos.RIGHT)
             {
-                CurrentPost = CurrentPost == Pos.CENTER ? Pos.RIGHT : Pos.CENTER;
+                m_dataState.CurrentPost = m_dataState.CurrentPost == Pos.CENTER ? Pos.RIGHT : Pos.CENTER;
                 m_mono.StartCoroutine(Turning(m_turnRange));
             }
-            else if (nextPos == Pos.LEFT && CurrentPost != Pos.LEFT)
+            else if (nextPos == Pos.LEFT && m_dataState.CurrentPost != Pos.LEFT)
             {
-                CurrentPost = CurrentPost == Pos.CENTER ? Pos.LEFT : Pos.CENTER;
+                m_dataState.CurrentPost = m_dataState.CurrentPost == Pos.CENTER ? Pos.LEFT : Pos.CENTER;
                 m_mono.StartCoroutine(Turning(-m_turnRange));
             }
         }
 
         IEnumerator Turning(float range)
         {
+           
             var dis = 0f;
             var lastPos = m_player.position.x;
             while (dis < MathF.Abs(range))
@@ -91,6 +117,7 @@ namespace Player
                 m_player.position = dir;
                 yield return null;
             }
+           
         }
     }
 }

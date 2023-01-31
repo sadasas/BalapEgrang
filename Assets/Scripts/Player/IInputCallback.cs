@@ -7,6 +7,7 @@ namespace Player
     {
         public event Action OnTap;
         public event Action OnHold;
+        public event Action OnRelease;
         public event Action<Vector3> OnSwipe;
     }
 }
