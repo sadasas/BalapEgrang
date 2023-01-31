@@ -8,7 +8,7 @@ namespace Enemy
     {
         Transform m_transform;
         MonoBehaviour m_gameObject;
-
+        AIAnimationBehaviour m_animationBehaviour;
         float m_speed;
         float m_turnRange;
         float m_turnSpeed;
@@ -21,7 +21,7 @@ namespace Enemy
 
         public Coroutine Coroutine { get; private set; }
 
-        public AIMovementBehaviour(Transform transform, float turnRange, float turnSpeed, AIData data, float speed, float timeFaster, float speedIncrease)
+        public AIMovementBehaviour(Transform transform, float turnRange, float turnSpeed, AIData data, float speed, float timeFaster, float speedIncrease, AIAnimationBehaviour animationBehaviour)
         {
             m_transform = transform;
             m_speed = speed;
@@ -30,6 +30,7 @@ namespace Enemy
             m_data = data;
             m_timeFaster = timeFaster;
             m_speedIncrease = speedIncrease;
+            m_animationBehaviour = animationBehaviour;
 
             m_gameObject = transform.GetComponent<MonoBehaviour>();
         }
@@ -41,7 +42,7 @@ namespace Enemy
         }
         public void Move()
         {
-
+            m_animationBehaviour.Walk();
             m_transform.Translate((m_transform.forward * m_speed) * Time.deltaTime, Space.World);
         }
 
@@ -51,6 +52,10 @@ namespace Enemy
             Coroutine = m_gameObject.StartCoroutine(Turning(dirX));
         }
 
+        public void Idle()
+        {
+            m_animationBehaviour.Idle();
+        }
         IEnumerator Turning(float dirX)
         {
             var dis = 0f;

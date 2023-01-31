@@ -1,5 +1,6 @@
 ﻿using Player;
 using Race;
+using System;
 using UnityEngine;
 
 namespace Enemy
@@ -10,11 +11,54 @@ namespace Enemy
         public AIState State;
         public Pos CurrentPos;
     }
+
+    public class AIAnimationBehaviour
+    {
+        Animator m_animator;
+        float m_walkLerpTime;
+
+        public event Action<AIState> EndAnimation;
+
+        public AIAnimationBehaviour(Animator animator, float walkLerpTime)
+        {
+            m_animator = animator;
+            m_walkLerpTime = walkLerpTime;
+        }
+
+        public void Walk()
+        {
+            var cwv = m_animator.GetFloat("Movement");
+            var val = Mathf.Lerp(cwv, 1, m_walkLerpTime);
+            m_animator.SetFloat("Movement", val);
+        }
+
+        public void Idle()
+        {
+            var cwv = m_animator.GetFloat("Movement");
+            if (cwv > 0.0f)
+            {
+                var val = Mathf.Lerp(cwv, 0, m_walkLerpTime);
+                m_animator.SetFloat("Movement", val);
+            }
+        }
+
+        public void Crash()
+        {
+            m_animator.SetFloat("Movement", 0);
+            m_animator.SetTrigger("IsCrash");
+        }
+
+        public void OnEndAnimation(AIState state)
+        {
+            EndAnimation?.Invoke(state);
+        }
+    }
     public class AIController : MonoBehaviour, IRacer
     {
         AIData m_data;
         AIMovementBehaviour m_movementBehaviour;
         AIBrainBehaviour m_brainBehaviour;
+        AIAnimationBehaviour m_animationBehaviour;
         public AIDamageBehaviour DamageBehaviour;
 
 
@@ -27,11 +71,15 @@ namespace Enemy
 
         [Header("Detect Obstacle Setting")]
         [SerializeField] float m_rayLength;
+        [SerializeField] float m_rayHeight;
         [SerializeField] LayerMask m_obstacleLayer;
 
-        [Header("Ability Setting")]    
+        [Header("Ability Setting")]
         [SerializeField] float m_timeFaster;
         [SerializeField] float m_speedIncrease;
+
+        [Header("Animation Setting")]
+        [SerializeField] float m_walkLerpTime;
 
         public AILevel Brain;
 
@@ -40,9 +88,10 @@ namespace Enemy
         private void Start()
         {
             m_data ??= new();
-            DamageBehaviour = new(m_respawnDelay, m_respawnPosDis, transform, m_data);
-            m_movementBehaviour = new(transform, m_turnRange, m_turnSpeed, m_data, m_speed,m_timeFaster,m_speedIncrease);
-            m_brainBehaviour = new(m_rayLength, m_obstacleLayer, Brain, m_data, transform, DamageBehaviour, m_movementBehaviour, this);
+            m_animationBehaviour = new(GetComponent<Animator>(), m_walkLerpTime);
+            DamageBehaviour = new(m_respawnDelay, m_respawnPosDis, transform, m_data, m_animationBehaviour);
+            m_movementBehaviour = new(transform, m_turnRange, m_turnSpeed, m_data, m_speed, m_timeFaster, m_speedIncrease, m_animationBehaviour);
+            m_brainBehaviour = new(m_rayLength, m_obstacleLayer, Brain, m_data, transform, DamageBehaviour, m_movementBehaviour, this, m_rayHeight);
         }
 
         private void Update()
@@ -52,6 +101,7 @@ namespace Enemy
             switch (m_data.State)
             {
                 case AIState.IDLE:
+                    m_movementBehaviour.Idle();
                     break;
                 case AIState.CRASHED:
                     break;
@@ -62,6 +112,9 @@ namespace Enemy
                 case AIState.TURNING:
                     m_brainBehaviour.TurnDecision();
                     break;
+                case AIState.DECISING:
+                    m_movementBehaviour.Idle();
+                    break;
                 default:
                     break;
             }
@@ -70,7 +123,7 @@ namespace Enemy
         private void OnDrawGizmos()
         {
             m_brainBehaviour.OnDrawGizmos();
-            
+
         }
 
         public void OnCTETriggered(GameObject obstacle)
@@ -80,6 +133,10 @@ namespace Enemy
         }
 
 
+        public void OnEndAnimation(AIState state)
+        {
+            m_animationBehaviour.OnEndAnimation(state);
+        }
 
         public void FinishRace()
         {

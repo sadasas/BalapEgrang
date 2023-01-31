@@ -10,15 +10,16 @@ namespace Enemy
         AIMovementBehaviour m_movementBehaviour;
         Vector3 m_rayStartPoin;
         float m_rayLength;
+        float m_rayheight;
         Transform m_transform;
         LayerMask m_layerMask;
         AILevel m_brain;
         AIData m_data;
         Coroutine m_coroutine;
-
+        bool isDecided = false;
         MonoBehaviour m_gameObject;
 
-        public AIBrainBehaviour(float rayLength, LayerMask layerMask, AILevel brain, AIData data, Transform transform, AIDamageBehaviour damageBehaviour, AIMovementBehaviour movementBehaviour, MonoBehaviour gameObject)
+        public AIBrainBehaviour(float rayLength, LayerMask layerMask, AILevel brain, AIData data, Transform transform, AIDamageBehaviour damageBehaviour, AIMovementBehaviour movementBehaviour, MonoBehaviour gameObject, float rayheight)
         {
             m_gameObject = gameObject;
             m_rayLength = rayLength;
@@ -26,10 +27,13 @@ namespace Enemy
             m_brain = brain;
             m_data = data;
             m_transform = transform;
+            m_rayheight = rayheight;
 
             m_damageBehaviour = damageBehaviour;
             m_movementBehaviour = movementBehaviour;
 
+
+            damageBehaviour.OnRespawn += () => isDecided = false;
         }
 
 
@@ -41,7 +45,7 @@ namespace Enemy
         public void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-           Gizmos.DrawLine(m_transform.position, m_transform.position + m_transform.forward * m_rayLength);
+            Gizmos.DrawLine(m_transform.position + Vector3.up * m_rayheight, (m_transform.position + Vector3.up * m_rayheight) + m_transform.forward * m_rayLength);
         }
 
         public void SolveCTE(GameObject obstacle)
@@ -50,16 +54,17 @@ namespace Enemy
         }
         public void ScanBlockObstacle()
         {
-           
 
-            if (Physics.Raycast(m_transform.position,  m_transform.forward, m_rayLength,m_layerMask))
+            if (isDecided) return;
+            if (Physics.Raycast(m_transform.position + Vector3.up * m_rayheight, m_transform.forward, m_rayLength, m_layerMask))
             {
 
-              
+
                 if (MakeDecision(0, m_brain.DecisionVarian) == 0)
                 {
                     m_data.State = AIState.TURNING;
                 }
+                isDecided = true;
 
             }
         }
@@ -67,7 +72,7 @@ namespace Enemy
         public int MakeDecision(int minRnd, int maxRnd)
         {
             var rand = UnityEngine.Random.Range(minRnd, maxRnd);
-
+            Debug.Log(rand);
             return rand;
         }
 
@@ -102,7 +107,7 @@ namespace Enemy
                 }
             }
 
-
+            isDecided = false;
 
         }
 
@@ -122,7 +127,7 @@ namespace Enemy
             }
             else
             {
-               
+
                 ///if collapse ?
                 m_data.State = AIState.MOVING;
                 m_movementBehaviour.IncreaseSpeed();

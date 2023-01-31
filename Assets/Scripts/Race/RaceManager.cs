@@ -99,7 +99,7 @@ namespace Race
 
 
             var id = m_racers.Count;
-            var heigth = newRacer.GetComponent<Collider>().bounds.extents.y;
+            var heigth = newRacer.GetComponent<Collider>().bounds.min.y;
             newRacer.transform.position = new Vector3(m_startPos[id].position.x, heigth, m_startPos[id].position.z);
             var racer = newRacer.GetComponent<IRacer>();
 
