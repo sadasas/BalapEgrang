@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e9730820ee86b548a4b65cd0a779d37, type: 3}
   m_Name: Easy
   m_EditorClassIdentifier: 
-  DecisionVarian: 5
+  DecisionVarian: 1
   DecisionMinCost: 2
   DecisionMaxCost: 5

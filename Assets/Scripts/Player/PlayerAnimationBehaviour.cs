@@ -27,8 +27,6 @@ namespace Player
         }
         public void Crash()
         {
-
-           
             m_animator.SetTrigger("IsCrash");
         }
         public void ForceStopAllAnimation()
@@ -45,7 +43,7 @@ namespace Player
         }
         public void Idle()
         {
-           
+
 
             var cwv = m_animator.GetFloat("Movement");
             if (cwv > 0.0f)
@@ -62,7 +60,7 @@ namespace Player
         }
         public void OnEndAnimCallback(PlayerState state)
         {
-           
+
             OnEndAnim?.Invoke(state);
         }
     }

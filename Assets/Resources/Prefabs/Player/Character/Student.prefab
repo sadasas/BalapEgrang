@@ -2366,7 +2366,7 @@ GameObject:
   - component: {fileID: 2364666974163908318}
   - component: {fileID: 2364666974163908316}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Student
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2452,14 +2452,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657e0fe1b48fd1f4a86d2a9525e550bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_type: {fileID: 11400000, guid: d0a74a236a73f0e48b005b3f0e92ce02, type: 2}
   m_turnTreshold: 0.2
   m_turnMinLength: 0.8
-  m_speed: 2
-  m_turnSpeed: 0.05
-  m_turnRange: 7
-  m_respawnPosDis: 1
-  m_maxPushVal: 2
-  m_abilityTime: 4
   m_walkLerpTime: 0.2
 --- !u!1 &9133134159190906180
 GameObject:

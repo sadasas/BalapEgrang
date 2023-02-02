@@ -1,3 +1,3 @@
 let l:bm_file_version = 1
-let l:bm_sessions = {'default': {'E:\un\asset\Project\BalapEgrang\BalapEgrang\Assets\Scripts\Camera\CameraController.cs': [{'sign_idx': 9500, 'line_nr': 5, 'content': '/// TODO:'},],}}
+let l:bm_sessions = {'default': {'E:\un\asset\Project\BalapEgrang\BalapEgrang\Assets\Scripts\ChooseCharacter\ChooseCharacterHandlerUI.cs': [{'sign_idx': 9500, 'line_nr': 9, 'content': '/// MAKE current obj selected rotate depend on touch drag position'},],}}
 let l:bm_current_session = 'default'

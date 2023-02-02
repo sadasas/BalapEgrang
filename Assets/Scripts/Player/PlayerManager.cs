@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Player
 {
-    public class PlayerManager :MonoBehaviour
+    public class PlayerManager : MonoBehaviour
     {
         [SerializeField] GameObject m_playablePlayerPrefab;
 
@@ -16,10 +16,15 @@ namespace Player
         }
         IEnumerator SpawningPlayablePlayer()
         {
+
             var parent = GameObject.FindGameObjectWithTag("RacersParent").transform;
             m_playerController = Instantiate(m_playablePlayerPrefab, parent).GetComponent<PlayerController>();
+
+            var guid = "PLAYER";
+
+            m_playerController.ID = guid;
             yield return null;
-            RaceManager.s_Instance.RegisterRacer(m_playerController.gameObject);
+            RaceManager.s_Instance.RegisterRacer(guid, m_playerController.gameObject, true);
 
             GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().Player = m_playerController.transform;
         }

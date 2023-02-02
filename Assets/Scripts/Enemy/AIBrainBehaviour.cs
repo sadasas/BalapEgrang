@@ -72,7 +72,7 @@ namespace Enemy
         public int MakeDecision(int minRnd, int maxRnd)
         {
             var rand = UnityEngine.Random.Range(minRnd, maxRnd);
-            Debug.Log(rand);
+           
             return rand;
         }
 

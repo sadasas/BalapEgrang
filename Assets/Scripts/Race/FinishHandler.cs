@@ -9,7 +9,7 @@ namespace Race
             var racer = other.GetComponent<IRacer>();
             if (racer != null)
             {
-                RaceManager.s_Instance.RacerFinished(other.gameObject);
+                RaceManager.s_Instance.RacerFinished(racer);
             }
 
         }

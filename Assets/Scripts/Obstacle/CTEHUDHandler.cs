@@ -66,7 +66,7 @@ namespace Obstacle
         void FailMatching()
         {
             m_player.GetComponent<PlayerController>().DamageBehaviour.Crash(Obstacle.transform);
-            RaceManager.s_Instance.RacerCrashed(m_player);
+            RaceManager.s_Instance.RacerCrashed(m_player.GetComponent<IRacer>());
         }
         IEnumerator randomingBar()
         {

@@ -1,7 +1,10 @@
 ﻿using Player;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
+using System.Linq;
 
 namespace Race
 {
@@ -12,17 +15,23 @@ namespace Race
         FINISHED,
     }
 
+
     public struct PlayerDataRace
     {
 
         public float Time;
         public int Rank;
         public int Respawned;
-        public PlayerDataRace(float time, int rank) : this()
+        public bool IsPlayer;
+        public float Distance;
+        public GameObject GameObject;
+				
+
+        public PlayerDataRace(float time, int rank, bool isPlayer = false) : this()
         {
             Time = time;
             Rank = rank;
-
+            IsPlayer = isPlayer;
         }
 
         public override string ToString()
@@ -32,6 +41,7 @@ namespace Race
 
 
     }
+
     public class RaceManager : MonoBehaviour
     {
         public static RaceManager s_Instance;
@@ -40,7 +50,7 @@ namespace Race
         static float s_Timer = 0;
         static int s_racerfinisheds = 0;
 
-        Dictionary<GameObject, PlayerDataRace> m_racers;
+        Dictionary<string, PlayerDataRace> m_racers;
         Transform[] m_startPos;
 
         public static RaceState s_State { get; private set; } = RaceState.STARTING;
@@ -62,39 +72,43 @@ namespace Race
             if (s_State == RaceState.PLAYING)
             {
                 s_Timer += Time.deltaTime;
-                foreach (var racer in m_racers)
+                foreach (var key in m_racers.Keys.ToArray())
                 {
-                    var dis = TrackRacer(racer.Key);
-
+                    TrackRacer(key);
                 }
+
+                CalculateRankPlayer();
+
             }
         }
 
-
-        public void RacerCrashed(GameObject racer)
+        public void RacerCrashed(IRacer racer)
         {
             if (s_State != RaceState.PLAYING) return;
-            var data = m_racers[racer];
+            var data = m_racers[racer.ID];
             data.Respawned++;
 
-            m_racers[racer] = data;
+            m_racers[racer.ID] = data;
 
 
         }
-        public void RacerFinished(GameObject racerFinished)
+        public void RacerFinished(IRacer racerFinished)
         {
 
             s_racerfinisheds++;
-            racerFinished.GetComponent<IRacer>().FinishRace();
-            var data = m_racers[racerFinished];
+            racerFinished.FinishRace();
+            var data = m_racers[racerFinished.ID];
             data.Rank = s_racerfinisheds;
             data.Time = s_Timer;
-            m_racers[racerFinished] = data;
-            Debug.Log(m_racers[racerFinished].ToString());
+            m_racers[racerFinished.ID] = data;
+            if (racerFinished.ID == "PLAYER")
+            {
+                StartCoroutine(FinishingRace());
+            }
             if (s_racerfinisheds == maxRacers) RaceFinished();
 
         }
-        public void RegisterRacer(GameObject newRacer)
+        public void RegisterRacer(string guid, GameObject newRacer, bool isPlayer)
         {
 
 
@@ -103,12 +117,45 @@ namespace Race
             newRacer.transform.position = new Vector3(m_startPos[id].position.x, heigth, m_startPos[id].position.z);
             var racer = newRacer.GetComponent<IRacer>();
 
-            m_racers.Add(newRacer, default);
+            PlayerDataRace newData = default;
+            newData.IsPlayer = isPlayer;
+            newData.GameObject = newRacer;
+            m_racers.Add(guid, newData);
+
 
             var pos = id == 0 ? Pos.LEFT : (id == 1 ? Pos.CENTER : Pos.RIGHT);
             racer.WaitStart(pos);
 
             if (IsAllRacerReady()) StartRace();
+        }
+
+        void CalculateRankPlayer()
+        {
+            var rank = 1;
+            var disPlayer = m_racers["PLAYER"].Distance;
+            foreach (var otherDis in m_racers.Values)
+            {
+                if (!otherDis.IsPlayer)
+                {
+                    if (otherDis.Distance > disPlayer) rank++;
+                    else if (rank > 1) rank--;
+                }
+
+            }
+            var rankHandler = UIManager.s_this.GetHUD(HUDType.RANK_RACER).GetComponent<RankRacerHandlerUI>();
+            rankHandler.gameObject.SetActive(true);
+            rankHandler.UpdateRank(rank);
+        }
+
+        void TrackRacer(string key)
+        {
+            var racerGameObject = m_racers[key].GameObject;
+
+            var startPos = new Vector3(racerGameObject.transform.position.x, racerGameObject.transform.position.y, m_startPos[0].position.z);
+            var dis = Vector3.Distance(startPos, racerGameObject.transform.position);
+            var oldData = m_racers[key];
+            oldData.Distance = dis;
+            m_racers[key] = oldData;
         }
 
         void SetupRace()
@@ -117,19 +164,9 @@ namespace Race
             m_startPos = Array.ConvertAll(GameObject.FindGameObjectsWithTag("StartPos"), (p => p.transform));
         }
 
-        float TrackRacer(GameObject racer)
-        {
-            var startPos = new Vector3(racer.transform.position.x, racer.transform.position.y, m_startPos[0].position.z);
-            return Vector3.Distance(startPos, racer.transform.position);
-        }
         void StartRace()
         {
-            s_State = RaceState.PLAYING;
-            foreach (var racer in m_racers)
-            {
-
-                racer.Key.GetComponent<IRacer>().StartRace();
-            }
+            StartCoroutine(StartingRace());
         }
 
         void RaceFinished()
@@ -144,8 +181,47 @@ namespace Race
         }
         bool IsAllRacerReady()
         {
+
             if (m_racers.Count == maxRacers) return true;
             return false;
+        }
+
+
+        IEnumerator StartingRace()
+        {
+            UIManager.s_this.ForceHUD(HUDType.COUNTDOWN_START);
+            var countDownHandler = UIManager.s_this.GetHUD(HUDType.COUNTDOWN_START).GetComponent<CountDownStartHandlerUI>();
+            var countDown = 3;
+            while (countDown > 0)
+            {
+                countDownHandler.UpdateCountDown(countDown);
+                countDown--;
+                yield return new WaitForSeconds(2f);
+            }
+            UIManager.s_this.DisableHUD(HUDType.COUNTDOWN_START);
+
+            s_State = RaceState.PLAYING;
+            foreach (var racer in m_racers)
+            {
+
+                racer.Value.GameObject.GetComponent<IRacer>().StartRace();
+            }
+        }
+
+        IEnumerator FinishingRace()
+        {
+            var statisticPlayerHUD = UIManager.s_this.GetHUD(HUDType.STATISTIC_PLAYER_RACE_FINISHED).GetComponent<StatisticPlayerHandlerUI>();
+            statisticPlayerHUD.gameObject.SetActive(true);
+            var dataRacePlayer = m_racers["PLAYER"];
+
+            statisticPlayerHUD.UpdateText(dataRacePlayer.Rank, dataRacePlayer.Time, dataRacePlayer.Respawned
+            );
+
+
+
+
+            yield return null;
+
         }
     }
 

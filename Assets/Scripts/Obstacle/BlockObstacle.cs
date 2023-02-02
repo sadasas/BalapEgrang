@@ -17,15 +17,16 @@ public class BlockObstacle : MonoBehaviour
         if (RaceManager.s_State != RaceState.PLAYING) return;
         if (other.CompareTag("Player"))
         {
-            var player = other.GetComponent<PlayerController>().DamageBehaviour;
-            player.Crash(transform);
-            RaceManager.s_Instance.RacerCrashed(other.gameObject);
+            var player = other.GetComponent<PlayerController>();
+            player.DamageBehaviour.Crash(transform);
+
+            RaceManager.s_Instance.RacerCrashed(player.GetComponent<IRacer>());
         }
         else if (other.CompareTag("Enemy"))
         {
-            var enemy = other.transform.GetComponent<AIController>().DamageBehaviour;
-            enemy.Crash(gameObject);
-            RaceManager.s_Instance.RacerCrashed(other.gameObject);
+            var enemy = other.transform.GetComponent<AIController>();
+            enemy.DamageBehaviour.Crash(gameObject);
+            RaceManager.s_Instance.RacerCrashed(enemy.GetComponent<IRacer>());
         }
     }
 
