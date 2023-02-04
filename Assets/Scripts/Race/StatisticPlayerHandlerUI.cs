@@ -1,6 +1,6 @@
 using UnityEngine;
 using TMPro;
-using System;
+using Utility;
 
 namespace Race
 {
@@ -12,9 +12,9 @@ namespace Race
 
         public void UpdateText(int rank, float second, int dead)
         {
-            TimeSpan time = TimeSpan.FromSeconds(second);
+
             m_rankText.text = rank.ToString();
-            m_timeText.text = time.ToString("hh':'mm':'ss");
+            m_timeText.text = Helper.FloatToTimeSpan(second);
             m_deadText.text = dead.ToString();
         }
 

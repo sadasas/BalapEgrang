@@ -25,7 +25,7 @@ namespace Race
         public bool IsPlayer;
         public float Distance;
         public GameObject GameObject;
-				
+
 
         public PlayerDataRace(float time, int rank, bool isPlayer = false) : this()
         {
@@ -103,6 +103,8 @@ namespace Race
             m_racers[racerFinished.ID] = data;
             if (racerFinished.ID == "PLAYER")
             {
+                var dataPlayer = m_racers[racerFinished.ID];
+                StageManager.s_Instance.CheckForNewRecord(dataPlayer.Time, dataPlayer.Rank, dataPlayer.Respawned);
                 StartCoroutine(FinishingRace());
             }
             if (s_racerfinisheds == maxRacers) RaceFinished();

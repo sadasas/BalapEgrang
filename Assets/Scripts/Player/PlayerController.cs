@@ -18,14 +18,12 @@ namespace Player
     }
     public class PlayerController : MonoBehaviour, IRacer
     {
-        [SerializeField] PlayerType m_type;
         PlayerDataState m_dataState;
         public InputBehaviour InputBehaviour;
         public MovementBehaviour MovementBehaviour;
         public AbilityBehaviour AbilityBehaviour;
         PlayerAnimationBehaviour m_animatonBehaviour;
         public DamageBehaviour DamageBehaviour { get; private set; }
-        public string ID { get; set; }
 
         [Header("Input Setting")]
         [SerializeField]
@@ -36,14 +34,18 @@ namespace Player
         [Header("Animation Setting")]
         [SerializeField]
         float m_walkLerpTime;
+
+        public string ID { get; set; }
+        public PlayerType Type;
+
         void Start()
         {
             m_dataState ??= new();
             m_animatonBehaviour = new(m_walkLerpTime, this.GetComponent<Animator>(), m_dataState);
             InputBehaviour = new(m_turnTreshold, m_turnMinLength);
-            MovementBehaviour = new(transform, InputBehaviour, m_type.Speed, m_type.TurnSpeed, m_type.TurnRange, m_animatonBehaviour, m_dataState);
-            DamageBehaviour = new(transform, m_type.RespawnPosDis, MovementBehaviour, m_animatonBehaviour, m_dataState);
-            AbilityBehaviour = new(m_type.MaxPushVal, this, m_type.AbilityTime, MovementBehaviour);
+            MovementBehaviour = new(transform, InputBehaviour, Type.Speed, Type.TurnSpeed, Type.TurnRange, m_animatonBehaviour, m_dataState);
+            DamageBehaviour = new(transform, Type.RespawnPosDis, MovementBehaviour, m_animatonBehaviour, m_dataState);
+            AbilityBehaviour = new(Type.MaxPushVal, this, Type.AbilityTime, MovementBehaviour);
         }
 
         void Update()
