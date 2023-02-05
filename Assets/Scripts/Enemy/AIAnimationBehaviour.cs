@@ -23,6 +23,16 @@ namespace Enemy
             m_animator.SetFloat("Movement", val);
         }
 
+        public void Faster()
+        {
+            m_animator.speed = 2;
+        }
+
+        public void ResetSpeed()
+        {
+            m_animator.speed = 1;
+        }
+
         public void Idle()
         {
             var cwv = m_animator.GetFloat("Movement");

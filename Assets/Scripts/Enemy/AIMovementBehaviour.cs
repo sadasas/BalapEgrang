@@ -77,19 +77,19 @@ namespace Enemy
 
         }
 
-         IEnumerator Faster()
+        IEnumerator Faster()
         {
-
+            m_animationBehaviour.Faster();
             var countDown = m_timeFaster;
             m_speed += m_speedIncrease;
             while (countDown > 0.0f)
             {
-               
+
                 countDown -= Time.deltaTime;
                 yield return null;
             }
             m_speed -= m_speedIncrease;
-
+            m_animationBehaviour.ResetSpeed();
             Coroutine = null;
         }
     }
