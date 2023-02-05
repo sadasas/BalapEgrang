@@ -29,9 +29,11 @@ namespace Enemy
         {
             for (int i = 0; i < max_EnemySpawned; i++)
             {
+                var level = StageManager.s_Instance.StageSelected.Level;
                 var guid = $"AI{i}";
                 var enemy = Instantiate(m_playableEnemy).GetComponent<AIController>();
                 enemy.ID = guid;
+                enemy.Brain = level;
                 m_enemys.Add(enemy);
                 RaceManager.s_Instance.RegisterRacer(guid, enemy.gameObject, false);
             }

@@ -16,3 +16,7 @@ MonoBehaviour:
   StageIndex: 4
   Description: medium stage
   Prefab: {fileID: 1867587098240722574, guid: 8d799923cbadced46932397af0612145, type: 3}
+  Level: {fileID: 11400000, guid: 2ab1cfa69fe16c84fbc51be449a6f0a0, type: 2}
+  RateA: 20
+  RateB: 45
+  RateC: 60

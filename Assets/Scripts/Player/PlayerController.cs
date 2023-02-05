@@ -50,6 +50,7 @@ namespace Player
 
         void Update()
         {
+
             InputBehaviour.OnUpdate();
             MovementBehaviour.Update();
         }
@@ -71,7 +72,6 @@ namespace Player
         {
             MovementBehaviour.IsMoveAllowed = false;
             m_animatonBehaviour.ForceStopAllAnimation();
-            Debug.Log("finis");
         }
 
         public void OnEndAnimation(PlayerState state)

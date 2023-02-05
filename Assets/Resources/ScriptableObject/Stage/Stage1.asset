@@ -16,3 +16,7 @@ MonoBehaviour:
   StageIndex: 3
   Description: beginer stage
   Prefab: {fileID: 5267819898234496730, guid: 6c5e1c62c6519d345ba830691c5cb66a, type: 3}
+  Level: {fileID: 11400000, guid: 7c3c289c3cfca9a41958111ef18236ab, type: 2}
+  RateA: 25
+  RateB: 45
+  RateC: 55

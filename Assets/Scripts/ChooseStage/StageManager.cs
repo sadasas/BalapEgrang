@@ -7,6 +7,9 @@ public class StageManager : MonoBehaviour
 
     Stage m_stageSelected;
     StageData m_currentStageData;
+    int m_index;
+
+    [SerializeField] Stage[] m_stages;
 
     public StageData CurrentStageData { get => m_currentStageData; }
     public Stage StageSelected { get => m_stageSelected; }
@@ -34,8 +37,9 @@ public class StageManager : MonoBehaviour
     {
         PlayerManager.s_Instance.UpdateStageRecord(m_currentStageData);
     }
-    public void SelectStage(Stage stage)
+    public void SelectStage(Stage stage, int index)
     {
+        m_index = index;
         m_stageSelected = stage;
         LoadData();
     }
@@ -44,27 +48,58 @@ public class StageManager : MonoBehaviour
     {
         if (m_currentStageData.Rating == 0)
         {
-            Debug.Log("new record");
+            var rate = CalculateRating(time);
+            m_currentStageData.Rating = rate;
             m_currentStageData.BestDead = dead;
             m_currentStageData.BestTime = time;
-            m_currentStageData.Rating = rank;
             m_currentStageData.StageIndex = m_stageSelected.StageIndex;
+            SaveData();
         }
         else
         {
             if (m_currentStageData.BestTime > time)
             {
-                Debug.Log("new record");
+                var rate = CalculateRating(time);
+                m_currentStageData.Rating = rate;
                 m_currentStageData.BestDead = dead;
                 m_currentStageData.BestTime = time;
-                m_currentStageData.Rating = rank;
                 m_currentStageData.StageIndex = m_stageSelected.StageIndex;
+                SaveData();
             }
         }
 
-        SaveData();
     }
 
+
+    public bool CheckNextStage()
+    {
+        if (m_index + 1 < m_stages.Length) return true;
+        return false;
+    }
+    public void NextStage()
+    {
+        m_index++;
+        m_stageSelected = m_stages[m_index];
+        GameManager.s_Instance.LoadScene(m_stageSelected.StageIndex);
+    }
+
+    public Stage[] GetStages()
+    {
+        return m_stages;
+    }
+
+    public int CalculateRating(float time)
+    {
+        if (time < m_stageSelected.RateA)
+        {
+            return 3;
+        }
+        else if (time < m_stageSelected.RateB)
+        {
+            return 2;
+        }
+        else return 1;
+    }
 
 }
 

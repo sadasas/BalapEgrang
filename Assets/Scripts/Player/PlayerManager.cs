@@ -72,8 +72,8 @@ namespace Player
                     if (item.StageIndex == newRecord.StageIndex)
                     {
                         m_dataPlayer.StageRecords.Remove(item);
+                        Debug.Log(m_dataPlayer.StageRecords.Count);
                     }
-
                     m_dataPlayer.StageRecords.Add(newRecord);
                 }
             }

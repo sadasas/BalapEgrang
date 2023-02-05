@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
         var sceneName = type switch
         {
             SceneType.CHOOSE_CHARACTER => "ChooseCharacter",
+            SceneType.MAIN_MENU => "MainMenu",
             SceneType.CHOOSE_STAGE => "ChooseStage",
             SceneType.STAGE_1 => "Stage1",
             SceneType.STAGE_2 => "Stage2",
@@ -107,7 +108,6 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator StartingGame()
     {
-        m_RaceManager = Instantiate(m_raceManagerPrefab).GetComponent<RaceManager>();
         yield return null;
         m_playerManager.SpawnPlayablePlayer();
         m_EnemyManager.SpawnPlayableEnemy();

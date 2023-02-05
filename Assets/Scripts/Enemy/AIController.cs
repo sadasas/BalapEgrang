@@ -39,7 +39,7 @@ namespace Enemy
         [Header("Animation Setting")]
         [SerializeField] float m_walkLerpTime;
 
-        public AILevel Brain;
+        public AILevel Brain { get; set; }
 
 
 

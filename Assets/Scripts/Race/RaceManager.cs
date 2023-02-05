@@ -1,5 +1,4 @@
 ﻿using Player;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UI;
@@ -47,13 +46,14 @@ namespace Race
         public static RaceManager s_Instance;
         public const int maxRacers = 3;
 
-        static float s_Timer = 0;
-        static int s_racerfinisheds = 0;
+        float m_timer = 0;
+        int m_racerFinisheds = 0;
 
         Dictionary<string, PlayerDataRace> m_racers;
-        Transform[] m_startPos;
 
-        public static RaceState s_State { get; private set; } = RaceState.STARTING;
+        [SerializeField] Transform[] m_startPos;
+
+        public RaceState s_State { get; private set; } = RaceState.STARTING;
 
 
 
@@ -71,7 +71,7 @@ namespace Race
         {
             if (s_State == RaceState.PLAYING)
             {
-                s_Timer += Time.deltaTime;
+                m_timer += Time.deltaTime;
                 foreach (var key in m_racers.Keys.ToArray())
                 {
                     TrackRacer(key);
@@ -81,6 +81,7 @@ namespace Race
 
             }
         }
+
 
         public void RacerCrashed(IRacer racer)
         {
@@ -95,11 +96,11 @@ namespace Race
         public void RacerFinished(IRacer racerFinished)
         {
 
-            s_racerfinisheds++;
+            m_racerFinisheds++;
             racerFinished.FinishRace();
             var data = m_racers[racerFinished.ID];
-            data.Rank = s_racerfinisheds;
-            data.Time = s_Timer;
+            data.Rank = m_racerFinisheds;
+            data.Time = m_timer;
             m_racers[racerFinished.ID] = data;
             if (racerFinished.ID == "PLAYER")
             {
@@ -107,7 +108,7 @@ namespace Race
                 StageManager.s_Instance.CheckForNewRecord(dataPlayer.Time, dataPlayer.Rank, dataPlayer.Respawned);
                 StartCoroutine(FinishingRace());
             }
-            if (s_racerfinisheds == maxRacers) RaceFinished();
+            if (m_racerFinisheds == maxRacers) RaceFinished();
 
         }
         public void RegisterRacer(string guid, GameObject newRacer, bool isPlayer)
@@ -163,7 +164,6 @@ namespace Race
         void SetupRace()
         {
             m_racers = new();
-            m_startPos = Array.ConvertAll(GameObject.FindGameObjectsWithTag("StartPos"), (p => p.transform));
         }
 
         void StartRace()
@@ -212,11 +212,13 @@ namespace Race
 
         IEnumerator FinishingRace()
         {
+
             var statisticPlayerHUD = UIManager.s_this.GetHUD(HUDType.STATISTIC_PLAYER_RACE_FINISHED).GetComponent<StatisticPlayerHandlerUI>();
             statisticPlayerHUD.gameObject.SetActive(true);
             var dataRacePlayer = m_racers["PLAYER"];
 
-            statisticPlayerHUD.UpdateText(dataRacePlayer.Rank, dataRacePlayer.Time, dataRacePlayer.Respawned
+            var rating = StageManager.s_Instance.CalculateRating(dataRacePlayer.Time);
+            statisticPlayerHUD.UpdateText(rating, dataRacePlayer.Rank, dataRacePlayer.Time, dataRacePlayer.Respawned
             );
 
 
