@@ -58,22 +58,40 @@ namespace Enemy
         }
         IEnumerator Turning(float dirX)
         {
-            var dis = 0f;
-            var lastPos = m_transform.position.x;
-            while (dis < MathF.Abs(m_turnRange))
+            m_animationBehaviour.Jump(true);
+            var nextPos = new Vector3(m_transform.position.x + dirX * m_turnRange, m_transform.position.y, m_transform.position.z + 0.5f);
+            if (dirX > 0)
             {
-                dis += MathF.Abs(m_transform.position.x - lastPos);
-                var dir = Vector3.Lerp(
-                    m_transform.position,
-                   m_transform.position + (m_transform.right * (dirX * m_turnRange)),
-                    m_turnSpeed
-                );
-                m_transform.position = dir;
-                yield return null;
-            }
+                while (m_transform.position.x < nextPos.x - 0.2f)
+                {
+                    var dir = Vector3.Lerp(
+                        m_transform.position,
+                    nextPos,
+                        m_turnSpeed
+                    );
+                    m_transform.position = dir;
+                    yield return null;
+                }
 
+            }
+            else
+            {
+                while (m_transform.position.x > nextPos.x + 0.2f)
+                {
+                    var dir = Vector3.Lerp(
+                        m_transform.position,
+                    nextPos,
+                        m_turnSpeed
+                    );
+                    m_transform.position = dir;
+                    yield return null;
+                }
+            }
+            m_animationBehaviour.Jump(false);
             m_data.State = AIState.MOVING;
+
             Coroutine = null;
+
 
         }
 

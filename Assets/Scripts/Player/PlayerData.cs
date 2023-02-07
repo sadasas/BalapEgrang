@@ -8,6 +8,8 @@ namespace Player
     {
         public string CurrentCharacterSelection;
         public List<StageData> StageRecords;
+        public List<PlayerType> CharacterCollections;
+        public string[] CharacterNames;
     }
 }
 

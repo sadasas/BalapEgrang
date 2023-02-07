@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Teacher
   Prefab: {fileID: 5267819898234496730, guid: 6c5e1c62c6519d345ba830691c5cb66a, type: 3}
-  Speed: 0
+  Speed: 1.5
   Acceleration: 0
-  TurnSpeed: 0
-  TurnRange: 0
-  RespawnPosDis: 0
-  MaxPushVal: 0
-  AbilityTime: 0
+  TurnSpeed: 0.1
+  TurnRange: 2.9
+  RespawnPosDis: 3
+  MaxPushVal: 2
+  AbilityTime: 2

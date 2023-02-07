@@ -23,6 +23,11 @@ namespace Enemy
             m_animator.SetFloat("Movement", val);
         }
 
+        public void Jump(bool isJump)
+        {
+            m_animator.SetBool("IsJump", isJump);
+        }
+
         public void Faster()
         {
             m_animator.speed = 2;

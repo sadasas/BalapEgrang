@@ -10,6 +10,7 @@ namespace UI
         COUNTDOWN_START,
         STATISTIC_PLAYER_RACE_FINISHED,
         RANK_RACER,
+        NEW_CHARACTER
     }
     public class UIManager : MonoBehaviour
     {
@@ -22,6 +23,7 @@ namespace UI
         [SerializeField] GameObject m_countDownStartHUD;
         [SerializeField] GameObject m_statisticPlayerFinishRaceHUD;
         [SerializeField] GameObject m_rankRacerHUD;
+        [SerializeField] GameObject m_newCharacterUIHUD;
 
 
 
@@ -78,6 +80,10 @@ namespace UI
             var rrHUD = Instantiate(m_rankRacerHUD, m_mainCanvas);
             rrHUD.SetActive(false);
             m_HUDs.Add(HUDType.RANK_RACER, rrHUD);
+
+            var ncHUD = Instantiate(m_newCharacterUIHUD, m_mainCanvas);
+            ncHUD.SetActive(false);
+            m_HUDs.Add(HUDType.NEW_CHARACTER, ncHUD);
         }
 
     }

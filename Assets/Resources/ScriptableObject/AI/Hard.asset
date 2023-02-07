@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e9730820ee86b548a4b65cd0a779d37, type: 3}
   m_Name: Hard
   m_EditorClassIdentifier: 
-  DecisionVarian: 2
+  DecisionVarian: 0
   DecisionMinCost: 1
   DecisionMaxCost: 3

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Player;
+using UI;
 
 public class StageManager : MonoBehaviour
 {
@@ -20,7 +21,6 @@ public class StageManager : MonoBehaviour
         s_Instance = this;
         DontDestroyOnLoad(gameObject);
     }
-
 
     void Start()
     {
@@ -44,11 +44,27 @@ public class StageManager : MonoBehaviour
         LoadData();
     }
 
+
+    #region  RACE API
+
+    public int CalculateRating(float time)
+    {
+        if (time < m_stageSelected.RateA)
+        {
+            return 3;
+        }
+        else if (time < m_stageSelected.RateB)
+        {
+            return 2;
+        }
+        else return 1;
+    }
+
     public void CheckForNewRecord(float time, int rank, int dead)
     {
+        var rate = CalculateRating(time);
         if (m_currentStageData.Rating == 0)
         {
-            var rate = CalculateRating(time);
             m_currentStageData.Rating = rate;
             m_currentStageData.BestDead = dead;
             m_currentStageData.BestTime = time;
@@ -59,7 +75,6 @@ public class StageManager : MonoBehaviour
         {
             if (m_currentStageData.BestTime > time)
             {
-                var rate = CalculateRating(time);
                 m_currentStageData.Rating = rate;
                 m_currentStageData.BestDead = dead;
                 m_currentStageData.BestTime = time;
@@ -68,7 +83,30 @@ public class StageManager : MonoBehaviour
             }
         }
 
+        CheckReward(rate);
     }
+
+    void CheckReward(int rate)
+    {
+        if (StageSelected.CharacterReward == null) return;
+
+        var newCr = StageSelected.CharacterReward;
+        foreach (var cr in PlayerManager.s_Instance.DataPlayer.CharacterCollections)
+        {
+            if (cr.Name.Equals(newCr.Name)) return;
+        }
+        if (rate >= StageSelected.RateReward)
+        {
+
+            var newCharacterUI = UIManager.s_this.GetHUD(HUDType.NEW_CHARACTER).GetComponent<NewCharacterHandlerUI>();
+            newCharacterUI.SetNewCharacter(StageSelected.CharacterImageReward);
+            newCharacterUI.gameObject.SetActive(true);
+            PlayerManager.s_Instance.AddNewCharacter(newCr);
+        }
+    }
+
+    #endregion
+
 
 
     public bool CheckNextStage()
@@ -83,23 +121,16 @@ public class StageManager : MonoBehaviour
         GameManager.s_Instance.LoadScene(m_stageSelected.StageIndex);
     }
 
+    public void RestartStage()
+    {
+        GameManager.s_Instance.LoadScene(m_stageSelected.StageIndex);
+    }
+
     public Stage[] GetStages()
     {
         return m_stages;
     }
 
-    public int CalculateRating(float time)
-    {
-        if (time < m_stageSelected.RateA)
-        {
-            return 3;
-        }
-        else if (time < m_stageSelected.RateB)
-        {
-            return 2;
-        }
-        else return 1;
-    }
 
 }
 

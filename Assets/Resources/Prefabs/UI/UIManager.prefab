@@ -49,3 +49,4 @@ MonoBehaviour:
   m_countDownStartHUD: {fileID: 6440416956794717259, guid: 983217ebe9857e342ac413eac6ba5d89, type: 3}
   m_statisticPlayerFinishRaceHUD: {fileID: 7872935188668756579, guid: fd3c9c8dbf6223e44b8989fcc6fd5d86, type: 3}
   m_rankRacerHUD: {fileID: 6724385018234498825, guid: 2e24d4c00d99bb74cadba0362c7a4261, type: 3}
+  m_newCharacterUIHUD: {fileID: 3766953144858714553, guid: 0b16eb9feabe0384aadc5fb9fe4e8b05, type: 3}

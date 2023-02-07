@@ -328,7 +328,7 @@ MonoBehaviour:
   m_respawnDelay: 3
   m_respawnPosDis: 1
   m_turnSpeed: 0.2
-  m_turnRange: 3
+  m_turnRange: 2.8
   m_rayLength: 2
   m_rayHeight: 1
   m_obstacleLayer:
@@ -337,7 +337,6 @@ MonoBehaviour:
   m_timeFaster: 2
   m_speedIncrease: 2
   m_walkLerpTime: 0.2
-  Brain: {fileID: 11400000, guid: 7c3c289c3cfca9a41958111ef18236ab, type: 2}
 --- !u!1 &1326509249396503160
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,8 +16,8 @@ MonoBehaviour:
   Prefab: {fileID: 1867587098240722574, guid: 8d799923cbadced46932397af0612145, type: 3}
   Speed: 2
   Acceleration: 0
-  TurnSpeed: 0.1
-  TurnRange: 6
+  TurnSpeed: 0.3
+  TurnRange: 2.9
   RespawnPosDis: 2
   MaxPushVal: 2
   AbilityTime: 4

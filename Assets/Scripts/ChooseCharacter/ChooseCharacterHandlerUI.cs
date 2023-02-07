@@ -21,6 +21,8 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI m_nameCharacterText;
     [SerializeField] TextMeshProUGUI m_speedText;
     [SerializeField] TextMeshProUGUI m_accelerationText;
+    [SerializeField] GameObject m_lock;
+    [SerializeField] GameObject m_selectBtn;
     [SerializeField] float m_turnSpeed;
 
     void Start()
@@ -48,6 +50,21 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
             m_currentSelection++;
         }
 
+    }
+
+    void CheckLock(string name)
+    {
+        foreach (var item in PlayerManager.s_Instance.DataPlayer.CharacterCollections)
+        {
+            if (item.Name.Equals(name))
+            {
+                m_lock.SetActive(false);
+                m_selectBtn.SetActive(true);
+                return;
+            }
+        }
+        m_selectBtn.SetActive(false);
+        m_lock.SetActive(true);
     }
 
     void RotateCharacterSelection()
@@ -101,6 +118,8 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
     void ShowCurrentSelection()
     {
         var data = m_characterSelection[m_currentSelection];
+
+        CheckLock(data.Name);
 
         m_nameCharacterText.text = data.Name;
         m_speedText.text = data.Speed.ToString();

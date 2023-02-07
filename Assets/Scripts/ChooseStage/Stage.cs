@@ -1,5 +1,7 @@
 using UnityEngine;
+using Player;
 using Enemy;
+using UnityEngine.UI;
 
 [CreateAssetMenu(menuName = "Stage", fileName = "Stage")]
 public class Stage : ScriptableObject
@@ -14,5 +16,11 @@ public class Stage : ScriptableObject
     public float RateA;
     public float RateB;
     public float RateC;
+
+
+    [Header("Reward Setting")]
+    public int RateReward;
+    public PlayerType CharacterReward;
+    public Sprite CharacterImageReward;
 }
 

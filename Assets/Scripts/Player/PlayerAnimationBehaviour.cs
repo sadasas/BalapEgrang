@@ -27,11 +27,13 @@ namespace Player
         }
         public void Crash()
         {
+            ForceStopAllAnimation();
             m_animator.SetTrigger("IsCrash");
         }
         public void ForceStopAllAnimation()
         {
             m_animator.SetFloat("Movement", 0);
+            m_animator.SetBool("IsJump", false);
         }
         public void Faster()
         {
@@ -41,6 +43,12 @@ namespace Player
         {
             m_animator.speed = 1;
         }
+
+        public void Jump(bool isJump)
+        {
+            m_animator.SetBool("IsJump", isJump);
+        }
+
         public void Idle()
         {
 

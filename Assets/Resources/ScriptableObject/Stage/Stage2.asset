@@ -20,3 +20,5 @@ MonoBehaviour:
   RateA: 20
   RateB: 45
   RateC: 60
+  RateReward: 3
+  CharacterReward: {fileID: 0}

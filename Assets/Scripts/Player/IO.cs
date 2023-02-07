@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using UnityEngine;
+using System.Collections.Generic;
+using Utility;
 
 namespace Player
 {
@@ -19,7 +21,17 @@ namespace Player
                     using (m_stream = new(m_path, FileMode.Create))
                     {
                         using var sWriter = new StreamWriter(m_stream);
-                        string json = JsonUtility.ToJson(data);
+
+                        var temp = data;
+                        List<string> sc = new();
+                        foreach (var item in data.CharacterCollections)
+                        {
+                            sc.Add(item.Name);
+
+                        }
+                        temp.CharacterNames = sc.ToArray();
+                        temp.CharacterCollections = null;
+                        string json = JsonUtility.ToJson(temp);
                         sWriter.Write(json);
                     }
 
@@ -46,6 +58,21 @@ namespace Player
                             using var rReader = new StreamReader(m_stream);
                             string json = rReader.ReadToEnd();
                             data = JsonUtility.FromJson<PlayerData>(json);
+
+                            if (data.CharacterNames != null)
+                            {
+                                data.CharacterCollections = new();
+                                foreach (var item in data.CharacterNames)
+                                {
+                                    var cr = Helper.GetPlayerType(item);
+
+                                    data.CharacterCollections.Add(cr);
+
+                                }
+
+                                data.CharacterNames = null;
+
+                            }
                         }
                     }
                 }

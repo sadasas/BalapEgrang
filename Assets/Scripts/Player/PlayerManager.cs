@@ -39,9 +39,19 @@ namespace Player
         void LoadData()
         {
             m_dataPlayer = m_ioHandler.LoadData();
+            if (m_dataPlayer.CharacterCollections == null || m_dataPlayer.CharacterCollections.Count == 0) AddDefaultCharacter();
 
         }
 
+        void AddDefaultCharacter()
+        {
+            m_dataPlayer.CharacterCollections = new();
+            var defaultCharacter = Helper.GetPlayerType("Student");
+            m_dataPlayer.CharacterCollections.Add(defaultCharacter);
+
+            SaveDataPlayer();
+
+        }
         void SaveDataPlayer()
         {
             m_ioHandler.SaveData(m_dataPlayer);
@@ -85,6 +95,12 @@ namespace Player
         {
 
             m_dataPlayer.CurrentCharacterSelection = selection.Name;
+            SaveDataPlayer();
+        }
+
+        public void AddNewCharacter(PlayerType newCharacter)
+        {
+            m_dataPlayer.CharacterCollections.Add(newCharacter);
             SaveDataPlayer();
         }
         #endregion
