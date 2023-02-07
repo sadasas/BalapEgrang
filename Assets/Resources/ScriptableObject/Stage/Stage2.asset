@@ -22,3 +22,6 @@ MonoBehaviour:
   RateC: 60
   RateReward: 3
   CharacterReward: {fileID: 0}
+  CharacterImageReward: {fileID: 0}
+  TimeCTEObstacle: 2
+  IncrementCTEObstacle: 0.08

@@ -8,8 +8,10 @@ namespace Player
         AbilityHUDHandler m_hudHandler;
         MovementBehaviour m_movementBehaviour;
         float m_time;
+        float m_countDown;
         int m_push;
         MonoBehaviour m_player;
+        Coroutine m_coroutine;
 
 
         public AbilityBehaviour(int push, MonoBehaviour player, float time, MovementBehaviour movementBehaviour)
@@ -23,8 +25,9 @@ namespace Player
         }
         public void IncreaseSpeed()
         {
-
-            m_player.StartCoroutine(Faster());
+            if (m_coroutine != null) m_countDown = m_time;
+            else
+                m_coroutine = m_player.StartCoroutine(Faster());
         }
 
 
@@ -33,16 +36,17 @@ namespace Player
         {
             m_hudHandler.gameObject.SetActive(true);
             m_hudHandler.UpdateSlider(m_time, (int)m_time);
-            var countDown = m_time;
+            m_countDown = m_time;
 
             m_movementBehaviour.IncreaseSpeed(m_push);
-            while (countDown > 0f)
+            while (m_countDown > 0f)
             {
-               
-                countDown -= Time.deltaTime;
-                m_hudHandler.UpdateSlider(countDown);
+
+                m_countDown -= Time.deltaTime;
+                m_hudHandler.UpdateSlider(m_countDown);
                 yield return null;
             }
+            m_coroutine = null;
             m_movementBehaviour.DecreaseSpeed(m_push);
             m_hudHandler.gameObject.SetActive(false);
         }

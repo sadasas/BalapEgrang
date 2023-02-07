@@ -25,9 +25,6 @@ namespace Player
         float m_turnSpeed;
 
         public bool IsMoveAllowed = true;
-
-
-
         public MovementBehaviour(
             Transform player,
             IInputCallback inputCallback,
@@ -58,6 +55,7 @@ namespace Player
         }
         public void IncreaseSpeed(int speed)
         {
+
             m_animationBehaviour.Faster();
             m_speed = m_speed * speed;
         }

@@ -11,21 +11,27 @@ namespace Obstacle
         IInputCallback m_inputCallback;
         bool m_isStop = false;
         GameObject m_player;
+        float m_increment;
+        float m_time;
 
         [SerializeField] Slider m_slider;
-        [SerializeField] float m_time;
-        [SerializeField] float m_increment;
+        [SerializeField] Slider m_timeSlider;
         [SerializeField] RectTransform m_hitBox;
         [SerializeField] RectTransform m_bar;
 
         public GameObject Obstacle { get; set; }
 
+        void Start()
+        {
 
+        }
 
         void OnEnable()
         {
-
             m_isStop = false;
+            var data = StageManager.s_Instance.StageSelected;
+            m_time = data.TimeCTEObstacle;
+            m_increment = data.IncrementCTEObstacle;
 
         }
         private void OnDisable()
@@ -73,9 +79,11 @@ namespace Obstacle
             m_player.GetComponent<PlayerController>().MovementBehaviour.IsMoveAllowed = false;
             var countDown = m_time;
             var increment = m_increment;
+            m_timeSlider.maxValue = m_time;
             while (countDown > 0f && m_isStop == false)
             {
                 countDown -= Time.deltaTime;
+                m_timeSlider.value = countDown;
                 m_slider.value += increment;
                 if (m_slider.value == 1) increment = -m_increment;
                 else if (m_slider.value == 0) increment = m_increment;

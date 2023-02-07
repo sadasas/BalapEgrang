@@ -1,7 +1,6 @@
 using UnityEngine;
 using Player;
 using Enemy;
-using UnityEngine.UI;
 
 [CreateAssetMenu(menuName = "Stage", fileName = "Stage")]
 public class Stage : ScriptableObject
@@ -22,5 +21,9 @@ public class Stage : ScriptableObject
     public int RateReward;
     public PlayerType CharacterReward;
     public Sprite CharacterImageReward;
+
+    [Header("CTE Obstacle Setting")]
+    public float TimeCTEObstacle;
+    public float IncrementCTEObstacle;
 }
 
