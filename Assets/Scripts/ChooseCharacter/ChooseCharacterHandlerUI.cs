@@ -50,6 +50,7 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
             m_currentSelection++;
         }
 
+
     }
 
     void CheckLock(string name)
@@ -125,7 +126,15 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
         m_speedText.text = data.Speed.ToString();
         m_accelerationText.text = data.Acceleration.ToString();
 
-        if (m_currentObj) m_currentObj.transform.position += m_nextPosOffset;
+        if (m_currentObj)
+        {
+            m_currentObj.transform.position += m_nextPosOffset;
+            m_currentObj.transform.rotation = Quaternion.identity;
+        }
+        else
+        {
+            if (m_currentSelection != 0) m_objSelection[0].transform.position += m_nextPosOffset;
+        }
         m_currentObj = m_objSelection[m_currentSelection];
         m_currentObj.transform.position = m_posObj.position;
     }

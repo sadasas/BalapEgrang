@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log(scene.name);
         switch (scene.name)
         {
             case "Stage1":

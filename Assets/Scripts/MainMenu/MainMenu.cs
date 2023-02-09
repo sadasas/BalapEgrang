@@ -4,7 +4,7 @@ using UnityEngine;
 public class MainMenu : MonoBehaviour
 {
 
-    public void LoadScene()
+    public void Play()
     {
         GameManager.s_Instance.LoadScene(SceneType.CHOOSE_STAGE);
 

@@ -10,6 +10,8 @@ namespace UI
         COUNTDOWN_START,
         STATISTIC_PLAYER_RACE_FINISHED,
         RANK_RACER,
+        SETTING,
+        CREDIT,
         NEW_CHARACTER
     }
     public class UIManager : MonoBehaviour
@@ -18,12 +20,15 @@ namespace UI
 
         Transform m_mainCanvas;
         Dictionary<HUDType, GameObject> m_HUDs;
+
+        [Header("Race HUD")]
         [SerializeField] GameObject m_CTEHUD;
         [SerializeField] GameObject m_abilityHUD;
         [SerializeField] GameObject m_countDownStartHUD;
         [SerializeField] GameObject m_statisticPlayerFinishRaceHUD;
         [SerializeField] GameObject m_rankRacerHUD;
         [SerializeField] GameObject m_newCharacterUIHUD;
+
 
 
 
@@ -37,7 +42,7 @@ namespace UI
         void Start()
         {
             m_mainCanvas = GameObject.FindWithTag("MainCanvas").transform;
-            InitHUD();
+            InitRaceHUD();
         }
 
         public void ForceHUD(HUDType hud)
@@ -55,10 +60,11 @@ namespace UI
             m_HUDs[hud].SetActive(false);
         }
 
-        void InitHUD()
-        {
-            m_HUDs = new();
 
+        void InitRaceHUD()
+        {
+
+            m_HUDs ??= new();
             //cte hud
             var cteHUD = Instantiate(m_CTEHUD, m_mainCanvas);
             cteHUD.SetActive(false);

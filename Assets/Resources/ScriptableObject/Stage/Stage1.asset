@@ -15,13 +15,12 @@ MonoBehaviour:
   Name: Stage 1
   StageIndex: 3
   Description: beginer stage
-  Prefab: {fileID: 5267819898234496730, guid: 6c5e1c62c6519d345ba830691c5cb66a, type: 3}
+  Image: {fileID: 21300000, guid: d441ba3fe194ca34ba37d4916d36b14d, type: 3}
   Level: {fileID: 11400000, guid: 7c3c289c3cfca9a41958111ef18236ab, type: 2}
   RateA: 25
   RateB: 45
   RateC: 55
-  RateReward: 3
-  CharacterReward: {fileID: 11400000, guid: 9813cad1048108c488f77a0b7de3fdb5, type: 2}
-  CharacterImageReward: {fileID: 21300000, guid: e1f9e811cb217f840b997579932a5f7d, type: 3}
   TimeCTEObstacle: 3
   IncrementCTEObstacle: 0.02
+  Quests:
+  - {fileID: 11400000, guid: 41cf051290b2f7547ab70d81204bd5cc, type: 2}

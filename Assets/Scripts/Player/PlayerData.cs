@@ -10,6 +10,8 @@ namespace Player
         public List<StageData> StageRecords;
         public List<PlayerType> CharacterCollections;
         public string[] CharacterNames;
+        public List<SceneType> RewardCollecteds;
+        public List<SceneType> RewardUnCollecteds;
     }
 }
 

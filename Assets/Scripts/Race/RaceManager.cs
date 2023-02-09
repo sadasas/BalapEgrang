@@ -14,6 +14,13 @@ namespace Race
         FINISHED,
     }
 
+    public enum DataRaceType
+    {
+        TIME,
+        RANK,
+        RESPAWNED,
+        RATE
+    }
 
     public struct PlayerDataRace
     {
@@ -102,10 +109,12 @@ namespace Race
             data.Rank = m_racerFinisheds;
             data.Time = m_timer;
             m_racers[racerFinished.ID] = data;
+
             if (racerFinished.ID == "PLAYER")
             {
                 var dataPlayer = m_racers[racerFinished.ID];
                 StageManager.s_Instance.CheckForNewRecord(dataPlayer.Time, dataPlayer.Rank, dataPlayer.Respawned);
+                StageManager.s_Instance.CheckReward(dataPlayer.Respawned, dataPlayer.Time, dataPlayer.Rank);
                 StartCoroutine(FinishingRace());
             }
             if (m_racerFinisheds == maxRacers) RaceFinished();
@@ -175,10 +184,6 @@ namespace Race
         {
 
             s_State = RaceState.FINISHED;
-            foreach (var racer in m_racers)
-            {
-                Debug.Log(racer.Value.ToString());
-            }
 
         }
         bool IsAllRacerReady()
@@ -220,9 +225,6 @@ namespace Race
             var rating = StageManager.s_Instance.CalculateRating(dataRacePlayer.Time);
             statisticPlayerHUD.UpdateText(rating, dataRacePlayer.Rank, dataRacePlayer.Time, dataRacePlayer.Respawned
             );
-
-
-
 
             yield return null;
 

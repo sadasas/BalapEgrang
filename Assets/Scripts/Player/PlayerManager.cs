@@ -77,15 +77,18 @@ namespace Player
             }
             else
             {
+                var isNew = true;
                 foreach (var item in m_dataPlayer.StageRecords.ToArray())
                 {
                     if (item.StageIndex == newRecord.StageIndex)
                     {
+                        isNew = false;
                         m_dataPlayer.StageRecords.Remove(item);
-                        Debug.Log(m_dataPlayer.StageRecords.Count);
+                        m_dataPlayer.StageRecords.Add(newRecord);
+                        break;
                     }
-                    m_dataPlayer.StageRecords.Add(newRecord);
                 }
+                if (isNew) m_dataPlayer.StageRecords.Add(newRecord);
             }
 
             SaveDataPlayer();
@@ -101,6 +104,23 @@ namespace Player
         public void AddNewCharacter(PlayerType newCharacter)
         {
             m_dataPlayer.CharacterCollections.Add(newCharacter);
+            SaveDataPlayer();
+        }
+
+        public void AddReward(SceneType type)
+        {
+            m_dataPlayer.RewardUnCollecteds ??= new();
+            m_dataPlayer.RewardUnCollecteds.Add(type);
+
+            SaveDataPlayer();
+        }
+
+        public void CollectReward(SceneType type)
+        {
+            m_dataPlayer.RewardCollecteds ??= new();
+            m_dataPlayer.RewardCollecteds.Add(type);
+            m_dataPlayer.RewardUnCollecteds.Remove(type);
+
             SaveDataPlayer();
         }
         #endregion

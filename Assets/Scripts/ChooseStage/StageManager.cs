@@ -1,6 +1,5 @@
 using UnityEngine;
 using Player;
-using UI;
 
 public class StageManager : MonoBehaviour
 {
@@ -22,10 +21,6 @@ public class StageManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start()
-    {
-
-    }
 
     void LoadData()
     {
@@ -62,9 +57,11 @@ public class StageManager : MonoBehaviour
 
     public void CheckForNewRecord(float time, int rank, int dead)
     {
+
         var rate = CalculateRating(time);
         if (m_currentStageData.Rating == 0)
         {
+
             m_currentStageData.Rating = rate;
             m_currentStageData.BestDead = dead;
             m_currentStageData.BestTime = time;
@@ -83,25 +80,41 @@ public class StageManager : MonoBehaviour
             }
         }
 
-        CheckReward(rate);
     }
 
-    void CheckReward(int rate)
+    public void CheckReward(int dead, float time, int rank)
     {
-        if (StageSelected.CharacterReward == null) return;
+        if (StageSelected.Quests.Length == 0) return;
 
-        var newCr = StageSelected.CharacterReward;
-        foreach (var cr in PlayerManager.s_Instance.DataPlayer.CharacterCollections)
+        var rewardCollected = PlayerManager.s_Instance.DataPlayer.RewardCollecteds;
+
+        if (rewardCollected != null && rewardCollected.Count > 0)
         {
-            if (cr.Name.Equals(newCr.Name)) return;
+            foreach (var stage in rewardCollected)
+            {
+                if (stage == StageSelected.StageIndex) return;
+            }
+
         }
-        if (rate >= StageSelected.RateReward)
+        var quest = StageSelected.Quests[0];
+
+        if (quest.Type == Race.DataRaceType.RATE)
         {
 
-            var newCharacterUI = UIManager.s_this.GetHUD(HUDType.NEW_CHARACTER).GetComponent<NewCharacterHandlerUI>();
-            newCharacterUI.SetNewCharacter(StageSelected.CharacterImageReward);
-            newCharacterUI.gameObject.SetActive(true);
-            PlayerManager.s_Instance.AddNewCharacter(newCr);
+            var rate = CalculateRating(time);
+            if (rate == quest.Rate)
+            {
+                PlayerManager.s_Instance.AddReward(StageSelected.StageIndex);
+            }
+        }
+
+        else if (quest.Type == Race.DataRaceType.RESPAWNED)
+        {
+            if (dead == quest.Dead)
+            {
+                PlayerManager.s_Instance.AddReward(StageSelected.StageIndex);
+            }
+
         }
     }
 
@@ -118,6 +131,7 @@ public class StageManager : MonoBehaviour
     {
         m_index++;
         m_stageSelected = m_stages[m_index];
+        LoadData();
         GameManager.s_Instance.LoadScene(m_stageSelected.StageIndex);
     }
 
