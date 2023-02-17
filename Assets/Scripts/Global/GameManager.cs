@@ -6,6 +6,7 @@ using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public enum SceneType
 {
     MAIN_MENU,

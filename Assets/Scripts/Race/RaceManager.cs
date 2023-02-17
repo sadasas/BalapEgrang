@@ -61,8 +61,7 @@ namespace Race
         [SerializeField] Transform[] m_startPos;
 
         public RaceState s_State { get; private set; } = RaceState.STARTING;
-
-
+        public Transform[] StartPos { get => m_startPos; }
 
         private void Awake()
         {

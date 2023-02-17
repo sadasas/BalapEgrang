@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Enemy
@@ -19,6 +18,7 @@ namespace Enemy
         AIData m_data;
 
 
+        public bool IsTurning { get; private set; } = false;
         public Coroutine Coroutine { get; private set; }
 
         public AIMovementBehaviour(Transform transform, float turnRange, float turnSpeed, AIData data, float speed, float timeFaster, float speedIncrease, AIAnimationBehaviour animationBehaviour)
@@ -48,7 +48,7 @@ namespace Enemy
 
         public void Turn(float dirX)
         {
-            if (Coroutine != null) return;
+            IsTurning = true;
             Coroutine = m_gameObject.StartCoroutine(Turning(dirX));
         }
 
@@ -58,6 +58,7 @@ namespace Enemy
         }
         IEnumerator Turning(float dirX)
         {
+
             m_animationBehaviour.Jump(true);
             var nextPos = new Vector3(m_transform.position.x + dirX * m_turnRange, m_transform.position.y, m_transform.position.z + 0.5f);
             if (dirX > 0)
@@ -87,10 +88,11 @@ namespace Enemy
                     yield return null;
                 }
             }
+            Coroutine = null;
             m_animationBehaviour.Jump(false);
             m_data.State = AIState.MOVING;
+            IsTurning = false;
 
-            Coroutine = null;
 
 
         }

@@ -72,13 +72,13 @@ namespace Enemy
         public int MakeDecision(int minRnd, int maxRnd)
         {
             var rand = UnityEngine.Random.Range(minRnd, maxRnd);
-           
+
             return rand;
         }
 
         public void TurnDecision()
         {
-            if (m_movementBehaviour.Coroutine != null) return;
+            if (m_movementBehaviour.IsTurning) return;
 
             if (m_data.CurrentPos == Pos.RIGHT)
             {

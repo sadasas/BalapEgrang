@@ -21,11 +21,6 @@ namespace Obstacle
 
         public GameObject Obstacle { get; set; }
 
-        void Start()
-        {
-
-        }
-
         void OnEnable()
         {
             m_isStop = false;
@@ -84,7 +79,7 @@ namespace Obstacle
             {
                 countDown -= Time.deltaTime;
                 m_timeSlider.value = countDown;
-                m_slider.value += increment;
+                m_slider.value += increment * Time.deltaTime;
                 if (m_slider.value == 1) increment = -m_increment;
                 else if (m_slider.value == 0) increment = m_increment;
                 yield return null;

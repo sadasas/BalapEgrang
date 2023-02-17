@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Obstacle
 {
-
     public class CTEObstacle : MonoBehaviour
     {
 
@@ -23,7 +22,7 @@ namespace Obstacle
 
 
             }
-            else if(other.CompareTag("Enemy"))
+            else if (other.CompareTag("Enemy"))
             {
                 var cteHandler = other.GetComponent<AIController>();
                 cteHandler.OnCTETriggered(gameObject);

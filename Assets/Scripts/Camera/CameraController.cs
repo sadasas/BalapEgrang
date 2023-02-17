@@ -1,10 +1,6 @@
 
 using UnityEngine;
 
-/// <summary>
-/// TODO:
-/// change player value when player is instantied 
-/// </summary>
 public class CameraController : MonoBehaviour
 {
 
