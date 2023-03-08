@@ -200,9 +200,13 @@ namespace Race
             var countDown = 3;
             while (countDown > 0)
             {
+                countDownHandler.gameObject.SetActive(true);
                 countDownHandler.UpdateCountDown(countDown);
                 countDown--;
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(1f);
+                countDownHandler.gameObject.SetActive(false);
+                yield return new WaitForSeconds(1f);
+                countDownHandler.gameObject.SetActive(true);
             }
             UIManager.s_this.DisableHUD(HUDType.COUNTDOWN_START);
 
