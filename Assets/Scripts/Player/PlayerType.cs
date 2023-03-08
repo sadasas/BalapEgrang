@@ -24,6 +24,11 @@ namespace Player
         public int MaxPushVal;
         public int AbilityTime;
 
+        [Header("UI Setting")]
+        public Color BgUI;
+        public Color BgCharacter;
+
+
 
     }
 }

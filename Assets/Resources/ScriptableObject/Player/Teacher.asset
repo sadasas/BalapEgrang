@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Teacher
   m_EditorClassIdentifier: 
   Name: Teacher
-  Prefab: {fileID: 5267819898234496730, guid: 6c5e1c62c6519d345ba830691c5cb66a, type: 3}
+  Prefab: {fileID: 9041821147190965791, guid: f41a096d750ebac4f98ca442a8cf884c, type: 3}
   Speed: 1.5
   Acceleration: 0
   TurnSpeed: 0.1
@@ -21,3 +21,5 @@ MonoBehaviour:
   RespawnPosDis: 3
   MaxPushVal: 2
   AbilityTime: 2
+  BgUI: {r: 0.48406905, g: 0.9245283, b: 0.5665712, a: 1}
+  BgCharacter: {r: 0.8113208, g: 0.2902507, b: 0.057404764, a: 1}

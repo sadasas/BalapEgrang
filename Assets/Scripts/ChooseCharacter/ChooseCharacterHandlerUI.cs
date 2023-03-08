@@ -2,6 +2,7 @@ using UnityEngine;
 using Player;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 
 public class ChooseCharacterHandlerUI : MonoBehaviour
@@ -13,7 +14,11 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
     ///Rotate character setting
     float m_startPosition;
     bool isSelected;
+    Image m_backgroundUI;
 
+
+
+    [SerializeField] Image m_backgroundCharacter;
     [SerializeField] LayerMask m_characterLayer;
     [SerializeField] PlayerType[] m_characterSelection;
     [SerializeField] Transform m_posObj;
@@ -21,12 +26,15 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI m_nameCharacterText;
     [SerializeField] TextMeshProUGUI m_speedText;
     [SerializeField] TextMeshProUGUI m_accelerationText;
+    [SerializeField] TextMeshProUGUI m_abilityText;
+    [SerializeField] TextMeshProUGUI m_turnSpeedText;
     [SerializeField] GameObject m_lock;
     [SerializeField] GameObject m_selectBtn;
     [SerializeField] float m_turnSpeed;
 
     void Start()
     {
+        m_backgroundUI = GetComponent<Image>();
         InitObj();
         LoadDataPlayer();
         ShowCurrentSelection();
@@ -53,7 +61,8 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
 
     }
 
-    void CheckLock(string name)
+
+    bool CheckLock(string name)
     {
         foreach (var item in PlayerManager.s_Instance.DataPlayer.CharacterCollections)
         {
@@ -61,11 +70,12 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
             {
                 m_lock.SetActive(false);
                 m_selectBtn.SetActive(true);
-                return;
+                return false;
             }
         }
         m_selectBtn.SetActive(false);
         m_lock.SetActive(true);
+        return true;
     }
 
     void RotateCharacterSelection()
@@ -109,7 +119,7 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
         var nextPos = m_posObj.position;
         foreach (var data in m_characterSelection)
         {
-            var newObj = Instantiate(data.Prefab, nextPos, Quaternion.identity);
+            var newObj = Instantiate(data.Prefab, nextPos, data.Prefab.transform.rotation);
             listObj.Add(newObj);
             nextPos += m_nextPosOffset;
         }
@@ -120,23 +130,36 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
     {
         var data = m_characterSelection[m_currentSelection];
 
-        CheckLock(data.Name);
+        var isLock = CheckLock(data.Name);
 
         m_nameCharacterText.text = data.Name;
         m_speedText.text = data.Speed.ToString();
         m_accelerationText.text = data.Acceleration.ToString();
+        m_turnSpeedText.text = data.TurnSpeed.ToString();
+        m_abilityText.text = data.AbilityTime.ToString();
 
         if (m_currentObj)
         {
             m_currentObj.transform.position += m_nextPosOffset;
-            m_currentObj.transform.rotation = Quaternion.identity;
+            m_currentObj.transform.rotation = Quaternion.Euler(0, 180, 0);
         }
         else
         {
             if (m_currentSelection != 0) m_objSelection[0].transform.position += m_nextPosOffset;
         }
-        m_currentObj = m_objSelection[m_currentSelection];
-        m_currentObj.transform.position = m_posObj.position;
+        if (!isLock)
+        {
+            m_currentObj = m_objSelection[m_currentSelection];
+            m_currentObj.transform.position = m_posObj.position;
+
+        }
+				else
+				{
+					m_objSelection[m_currentSelection].transform.position += m_nextPosOffset;
+				}
+
+        m_backgroundUI.color = m_characterSelection[m_currentSelection].BgUI;
+        m_backgroundCharacter.color = m_characterSelection[m_currentSelection].BgCharacter;
     }
 
     public void SelectCharacter()
@@ -160,7 +183,7 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
         ShowCurrentSelection();
     }
 
-    public void BackCharacter()
+    public void PreviousCharacter()
     {
         if (m_currentSelection - 1 >= 0)
         {
@@ -169,6 +192,12 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
         else m_currentSelection = m_characterSelection.Length - 1;
         ShowCurrentSelection();
 
+    }
+
+    public void Back()
+    {
+
+        GameManager.s_Instance.LoadScene(SceneType.CHOOSE_STAGE);
     }
 
 
