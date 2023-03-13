@@ -18,6 +18,7 @@ MonoBehaviour:
   Acceleration: 0
   TurnSpeed: 0.3
   TurnRange: 2.9
+  DistanceMove: 1
   RespawnPosDis: 2
   MaxPushVal: 2
   AbilityTime: 4

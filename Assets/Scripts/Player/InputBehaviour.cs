@@ -8,6 +8,7 @@ namespace Player
         float m_movePressTime = 0;
         float m_turnTreshold;
         float m_turnMinLength;
+        bool m_isMoved;
 
         public InputBehaviour(float turnTreshold, float turnMinLength)
         {
@@ -43,6 +44,7 @@ namespace Player
                     return;
                 m_movePressTime = m_turnTreshold;
                 OnSwipe?.Invoke(tdir);
+                m_isMoved = true;
             }
             else if (t.phase == TouchPhase.Began)
             {
@@ -50,7 +52,9 @@ namespace Player
             }
             else if (t.phase == TouchPhase.Ended)
             {
-                OnRelease?.Invoke();
+                if (!m_isMoved)
+                    OnRelease?.Invoke();
+                m_isMoved = false;
             }
         }
     }

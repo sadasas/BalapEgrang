@@ -20,9 +20,7 @@ namespace Player
 
         public void Walk()
         {
-            var cwv = m_animator.GetFloat("Movement");
-            var val = Mathf.Lerp(cwv, 1, m_walkLerpTime);
-            m_animator.SetFloat("Movement", val);
+            m_animator.SetBool("IsMove", true);
 
         }
         public void Crash()
@@ -51,14 +49,7 @@ namespace Player
 
         public void Idle()
         {
-
-
-            var cwv = m_animator.GetFloat("Movement");
-            if (cwv > 0.0f)
-            {
-                var val = Mathf.Lerp(cwv, 0, m_walkLerpTime);
-                m_animator.SetFloat("Movement", val);
-            }
+            m_animator.SetBool("IsMove", false);
 
         }
 

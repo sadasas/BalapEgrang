@@ -16,6 +16,7 @@ namespace Player
         public float Acceleration;
         public float TurnSpeed;
         public float TurnRange;
+        public float DistanceMove;
 
         [Header("Damage Setting")]
         public float RespawnPosDis;

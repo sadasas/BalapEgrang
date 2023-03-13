@@ -43,7 +43,7 @@ namespace Player
             m_dataState ??= new();
             m_animatonBehaviour = new(m_walkLerpTime, this.GetComponent<Animator>(), m_dataState);
             InputBehaviour = new(m_turnTreshold, m_turnMinLength);
-            MovementBehaviour = new(transform, InputBehaviour, Type.Speed, Type.TurnSpeed, Type.TurnRange, m_animatonBehaviour, m_dataState);
+            MovementBehaviour = new(transform, InputBehaviour, Type.Speed, Type.TurnSpeed, Type.TurnRange, m_animatonBehaviour, m_dataState, Type.DistanceMove);
             DamageBehaviour = new(transform, Type.RespawnPosDis, MovementBehaviour, m_animatonBehaviour, m_dataState);
             AbilityBehaviour = new(Type.MaxPushVal, this, Type.AbilityTime, MovementBehaviour);
         }

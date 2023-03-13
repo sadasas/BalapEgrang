@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -17,14 +16,18 @@ namespace Player
         PlayerAnimationBehaviour m_animationBehaviour;
         Transform m_player;
         MonoBehaviour m_mono;
-        Coroutine m_coroutine;
         IInputCallback m_inputCallback;
+        Coroutine m_currentCoro;
+        bool m_isTurning;
 
+        float m_distanceMove;
         float m_speed;
         float m_turnRange;
         float m_turnSpeed;
+        float m_countdownMove;
 
         public bool IsMoveAllowed = true;
+
         public MovementBehaviour(
             Transform player,
             IInputCallback inputCallback,
@@ -33,7 +36,8 @@ namespace Player
             float turnRange,
             PlayerAnimationBehaviour animationBehaviour,
 
-            PlayerDataState dataState)
+            PlayerDataState dataState,
+            float distanceMove)
         {
             m_player = player;
             m_mono = player.GetComponent<MonoBehaviour>();
@@ -41,12 +45,18 @@ namespace Player
             m_speed = speed;
             m_turnSpeed = turnSpeed;
 
-            m_inputCallback.OnHold += MoveForward;
             m_inputCallback.OnSwipe += Turn;
-            m_inputCallback.OnRelease += Idle;
+            m_inputCallback.OnRelease += () =>
+            {
+                if (!IsMoveAllowed) return;
+                if (m_currentCoro != null) m_countdownMove = distanceMove;
+                else
+                    m_currentCoro = m_mono.StartCoroutine(Moving());
+            };
             m_turnRange = turnRange;
             m_animationBehaviour = animationBehaviour;
             m_dataState = dataState;
+            m_distanceMove = distanceMove;
         }
 
         public void Update()
@@ -66,37 +76,57 @@ namespace Player
             m_speed = m_speed / speed;
         }
 
+
         public void Idle()
         {
             m_dataState.State = PlayerState.IDLE;
+            if (m_currentCoro != null)
+            {
+                m_mono.StopCoroutine(m_currentCoro);
+                m_currentCoro = null;
+            }
             m_animationBehaviour.Idle();
         }
 
-        void MoveForward()
+
+        IEnumerator Moving()
         {
-            if (!IsMoveAllowed) return;
+            m_countdownMove = m_distanceMove;
             m_dataState.State = PlayerState.WALKING;
             m_animationBehaviour.Walk();
-            m_player.Translate((m_player.forward * m_speed) * Time.deltaTime, Space.World);
+            while (m_countdownMove > 0)
+            {
+                m_countdownMove -= Time.deltaTime;
+                m_player.Translate((Vector3.forward * m_speed) * Time.deltaTime, Space.World);
+                yield return null;
+
+            }
+            m_currentCoro = null;
+            m_dataState.State = PlayerState.IDLE;
         }
 
 
         void Turn(Vector3 input)
         {
-            if (!IsMoveAllowed || m_coroutine != null) return;
+            if (!IsMoveAllowed || m_isTurning) return;
 
+            if (m_currentCoro != null)
+            {
+                m_mono.StopCoroutine(m_currentCoro);
+                Idle();
+            }
             m_dataState.State = PlayerState.TURNING;
             var nextPos = (input.x < 0 ? Pos.LEFT : Pos.RIGHT);
 
             if (nextPos == Pos.RIGHT && m_dataState.CurrentPost != Pos.RIGHT)
             {
                 m_dataState.CurrentPost = m_dataState.CurrentPost == Pos.CENTER ? Pos.RIGHT : Pos.CENTER;
-                m_coroutine = m_mono.StartCoroutine(Turning(m_turnRange));
+                m_currentCoro = m_mono.StartCoroutine(Turning(m_turnRange));
             }
             else if (nextPos == Pos.LEFT && m_dataState.CurrentPost != Pos.LEFT)
             {
                 m_dataState.CurrentPost = m_dataState.CurrentPost == Pos.CENTER ? Pos.LEFT : Pos.CENTER;
-                m_coroutine = m_mono.StartCoroutine(Turning(-m_turnRange));
+                m_currentCoro = m_mono.StartCoroutine(Turning(-m_turnRange));
             }
         }
 
@@ -132,7 +162,8 @@ namespace Player
                 }
             }
             m_animationBehaviour.Jump(false);
-            m_coroutine = null;
+            m_currentCoro = null;
+            m_isTurning = false;
 
         }
     }
