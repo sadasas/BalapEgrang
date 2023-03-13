@@ -1,3 +1,3 @@
-3d Game android  build with Unity Engine
+3d mobile Game  build with Unity Engine
 
 ### WORK IN PROGRESS
