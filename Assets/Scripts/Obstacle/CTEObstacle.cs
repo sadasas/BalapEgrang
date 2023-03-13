@@ -12,10 +12,10 @@ namespace Obstacle
         {
             if (other.CompareTag("Player"))
             {
-                UIManager.s_this.ForceHUD(HUDType.CTE);
+                UIManager.s_Instance.ForceHUD(HUDType.CTE);
                 var player = other.GetComponent<PlayerController>().MovementBehaviour;
                 player.Idle();
-                var cteHandler = UIManager.s_this.GetHUD(HUDType.CTE).GetComponent<CTEHUDHandler>();
+                var cteHandler = UIManager.s_Instance.GetHUD(HUDType.CTE).GetComponent<CTEHUDHandler>();
                 cteHandler.Obstacle = this.gameObject;
                 cteHandler.SetPlayer(other.gameObject);
                 cteHandler.PlayCTE();

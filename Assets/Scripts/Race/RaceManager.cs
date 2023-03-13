@@ -153,7 +153,7 @@ namespace Race
                 }
 
             }
-            var rankHandler = UIManager.s_this.GetHUD(HUDType.RANK_RACER).GetComponent<RankRacerHandlerUI>();
+            var rankHandler = UIManager.s_Instance.GetHUD(HUDType.RANK_RACER).GetComponent<RankRacerHandlerUI>();
             rankHandler.gameObject.SetActive(true);
             rankHandler.UpdateRank(rank);
         }
@@ -195,8 +195,8 @@ namespace Race
 
         IEnumerator StartingRace()
         {
-            UIManager.s_this.ForceHUD(HUDType.COUNTDOWN_START);
-            var countDownHandler = UIManager.s_this.GetHUD(HUDType.COUNTDOWN_START).GetComponent<CountDownStartHandlerUI>();
+            UIManager.s_Instance.ForceHUD(HUDType.COUNTDOWN_START);
+            var countDownHandler = UIManager.s_Instance.GetHUD(HUDType.COUNTDOWN_START).GetComponent<CountDownStartHandlerUI>();
             var countDown = 3;
             while (countDown > 0)
             {
@@ -208,7 +208,7 @@ namespace Race
                 yield return new WaitForSeconds(1f);
                 countDownHandler.gameObject.SetActive(true);
             }
-            UIManager.s_this.DisableHUD(HUDType.COUNTDOWN_START);
+            UIManager.s_Instance.DisableHUD(HUDType.COUNTDOWN_START);
 
             s_State = RaceState.PLAYING;
             foreach (var racer in m_racers)
@@ -221,7 +221,7 @@ namespace Race
         IEnumerator FinishingRace()
         {
 
-            var statisticPlayerHUD = UIManager.s_this.GetHUD(HUDType.STATISTIC_PLAYER_RACE_FINISHED).GetComponent<StatisticPlayerHandlerUI>();
+            var statisticPlayerHUD = UIManager.s_Instance.GetHUD(HUDType.STATISTIC_PLAYER_RACE_FINISHED).GetComponent<StatisticPlayerHandlerUI>();
             statisticPlayerHUD.gameObject.SetActive(true);
             var dataRacePlayer = m_racers["PLAYER"];
 

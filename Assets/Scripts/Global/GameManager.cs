@@ -4,6 +4,7 @@ using Race;
 using System.Collections;
 using UI;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
@@ -26,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     public static GameState s_GameState = GameState.PLAYING;
     public static GameManager s_Instance;
-    public PlayerManager m_playerManager;
+    PlayerManager m_playerManager;
     UIManager m_UIManager;
     RaceManager m_RaceManager;
     EnemyManager m_EnemyManager;
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject m_UIManagerPrefab;
     [SerializeField] GameObject m_raceManagerPrefab;
     [SerializeField] GameObject m_enemyManagerPrefab;
+
 
     void Awake()
     {
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         InitPlayerManager();
+        InitUIManager();
 
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -83,9 +86,30 @@ public class GameManager : MonoBehaviour
             SceneType.STAGE_1 => "Stage1",
             SceneType.STAGE_2 => "Stage2",
         };
-
-        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        StartCoroutine(ProcessLoadScene(sceneName));
     }
+
+
+    IEnumerator ProcessLoadScene(string sceneName)
+    {
+        var m_loadSceneHUD = m_UIManager.GetHUD(HUDType.LOADING_SCENE);
+        var m_loadSlider = m_loadSceneHUD.transform.GetChild(0).GetChild(0).GetComponent<Slider>();
+        m_loadSceneHUD.SetActive(true);
+
+        AsyncOperation asyncLoadScene = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        while (!asyncLoadScene.isDone)
+        {
+            m_loadSlider.value = asyncLoadScene.progress;
+
+            yield return null;
+
+        }
+        yield return null;
+        m_loadSceneHUD.SetActive(false);
+    }
+
+
+
 
     void InitStageManager()
     {
@@ -98,9 +122,14 @@ public class GameManager : MonoBehaviour
         m_playerManager = Instantiate(m_playerManagerPrefab).GetComponent<PlayerManager>();
     }
 
+    void InitUIManager()
+    {
+
+        m_UIManager = Instantiate(m_UIManagerPrefab).GetComponent<UIManager>();
+    }
+
     void StartGame()
     {
-        m_UIManager = Instantiate(m_UIManagerPrefab).GetComponent<UIManager>();
         m_EnemyManager = Instantiate(m_enemyManagerPrefab).GetComponent<EnemyManager>();
 
         if (s_GameState == GameState.PLAYING) StartCoroutine(StartingGame());

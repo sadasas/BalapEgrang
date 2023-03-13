@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Student
   Prefab: {fileID: 9041821147190965791, guid: f41a096d750ebac4f98ca442a8cf884c, type: 3}
-  Speed: 2
+  Speed: 1
   Acceleration: 0
-  TurnSpeed: 0.3
+  TurnSpeed: 0.2
   TurnRange: 2.9
   DistanceMove: 1
   RespawnPosDis: 2

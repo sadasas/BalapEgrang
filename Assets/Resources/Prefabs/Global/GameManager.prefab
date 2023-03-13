@@ -44,8 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ee8352e9ea25d040a090735649ccf76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_playerManager: {fileID: 0}
   m_playerManagerPrefab: {fileID: 5834247627244234470, guid: 15fea87a51d8e3f409e1f1259e7ce6a7, type: 3}
   m_stageManagerPrefab: {fileID: 4032623498172135166, guid: cb0eea17fe9a1da4ea79fac63e74e6de, type: 3}
   m_UIManagerPrefab: {fileID: 7072082148053009626, guid: 2f188c416a045eb48a19be4828c9acc9, type: 3}
   m_raceManagerPrefab: {fileID: 7483791254735753138, guid: 395a3c505c5659b4a9c837c8033e6dd4, type: 3}
   m_enemyManagerPrefab: {fileID: 1883516674056238458, guid: db6cb75770c4e1b4d9734469895b3802, type: 3}
+  m_loadSceneHUD: {fileID: 2812871426395144868, guid: ea8d77f47cde0744ab714138d0a3458a, type: 3}
