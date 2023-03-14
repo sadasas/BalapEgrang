@@ -30,8 +30,8 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          permissions:
-            contents: write
+        permissions:
+          contents: write
 
       # Build
       - name: Build project
@@ -43,8 +43,8 @@ jobs:
         with:
           targetPlatform: Android
           unityVersion: auto
-          permissions:
-            contents: write
+        permissions:
+          contents: write
 
       # Output
       - uses: actions/upload-artifact@v2
