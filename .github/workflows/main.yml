@@ -1,9 +1,8 @@
 name: Actions 😎
 
-on: 
+on:
   push:
-    branches:
-      - build
+    branches: [ master ]
 
 jobs:
   build:
