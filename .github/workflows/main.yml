@@ -25,16 +25,16 @@ jobs:
 
       # Test
       - name: Run tests
+        permissions: write-all
         uses: game-ci/unity-test-runner@v2
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-        permissions:
-          contents: write
 
       # Build
       - name: Build project
+        permissions: write-all
         uses: game-ci/unity-builder@v2
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -43,8 +43,6 @@ jobs:
         with:
           targetPlatform: Android
           unityVersion: auto
-        permissions:
-          contents: write
 
       # Output
       - uses: actions/upload-artifact@v2
