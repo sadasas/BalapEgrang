@@ -225,7 +225,7 @@ namespace Race
             statisticPlayerHUD.gameObject.SetActive(true);
             var dataRacePlayer = m_racers["PLAYER"];
 
-            var rating = StageManager.s_Instance.CalculateRating(dataRacePlayer.Time);
+            var rating = StageManager.s_Instance.CalculateRating(dataRacePlayer.Rank, dataRacePlayer.Time);
             statisticPlayerHUD.UpdateText(rating, dataRacePlayer.Rank, dataRacePlayer.Time, dataRacePlayer.Respawned
             );
 

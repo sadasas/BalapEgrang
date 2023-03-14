@@ -832,7 +832,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 170}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &375745378
@@ -2017,8 +2017,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   m_characterSelection:
-  - {fileID: 11400000, guid: 9813cad1048108c488f77a0b7de3fdb5, type: 2}
   - {fileID: 11400000, guid: d0a74a236a73f0e48b005b3f0e92ce02, type: 2}
+  - {fileID: 11400000, guid: 9813cad1048108c488f77a0b7de3fdb5, type: 2}
   m_posObj: {fileID: 1910138525}
   m_nextPosOffset: {x: 10, y: 0, z: 0}
   m_nameCharacterText: {fileID: 87932342}

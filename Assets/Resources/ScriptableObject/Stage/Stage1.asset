@@ -17,7 +17,7 @@ MonoBehaviour:
   Description: beginer stage
   Image: {fileID: 21300000, guid: d441ba3fe194ca34ba37d4916d36b14d, type: 3}
   Level: {fileID: 11400000, guid: 7c3c289c3cfca9a41958111ef18236ab, type: 2}
-  RateA: 25
+  RateA: 35
   RateB: 45
   RateC: 55
   TimeCTEObstacle: 3

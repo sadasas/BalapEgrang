@@ -89,7 +89,6 @@ namespace UI
         {
             m_HUDs ??= new();
             m_HUDs[HUDType.LOADING_SCENE] = Instantiate(m_loadSceneHUD, transform);
-            DontDestroyOnLoad(m_HUDs[HUDType.LOADING_SCENE]);
 
         }
 
