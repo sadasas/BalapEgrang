@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
 public enum SceneType
 {
     MAIN_MENU,
@@ -32,12 +31,14 @@ public class GameManager : MonoBehaviour
     RaceManager m_RaceManager;
     EnemyManager m_EnemyManager;
     StageManager m_stageManager;
+    TutorialManager m_tutorialManager;
 
     [SerializeField] GameObject m_playerManagerPrefab;
     [SerializeField] GameObject m_stageManagerPrefab;
     [SerializeField] GameObject m_UIManagerPrefab;
     [SerializeField] GameObject m_raceManagerPrefab;
     [SerializeField] GameObject m_enemyManagerPrefab;
+    [SerializeField] GameObject m_tutorialManagerPrefab;
 
 
     void Awake()
@@ -45,6 +46,15 @@ public class GameManager : MonoBehaviour
         if (s_Instance != null) Destroy(gameObject);
         else
             s_Instance = this;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            PlayerPrefs.SetInt("Tutorial", 0);
+            Debug.Log("tutoriel reset");
+        }
     }
 
     /// <summary>
@@ -71,21 +81,37 @@ public class GameManager : MonoBehaviour
             case "ChooseStage":
                 InitStageManager();
                 break;
+            case "Tutorial":
+                SetupTutorial();
+                break;
             default:
                 break;
         }
     }
 
+
     public void LoadScene(SceneType type)
     {
-        var sceneName = type switch
+        var sceneName = "";
+        if (type == SceneType.STAGE_1)
         {
-            SceneType.CHOOSE_CHARACTER => "ChooseCharacter",
-            SceneType.MAIN_MENU => "MainMenu",
-            SceneType.CHOOSE_STAGE => "ChooseStage",
-            SceneType.STAGE_1 => "Stage1",
-            SceneType.STAGE_2 => "Stage2",
-        };
+            var tutorial = PlayerPrefs.GetInt("Tutorial");
+            if (tutorial == 0)
+                sceneName = "Tutorial";
+        }
+
+        if (sceneName == "")
+        {
+            sceneName = type switch
+            {
+                SceneType.CHOOSE_CHARACTER => "ChooseCharacter",
+                SceneType.MAIN_MENU => "MainMenu",
+                SceneType.CHOOSE_STAGE => "ChooseStage",
+                SceneType.STAGE_1 => "Stage1",
+                SceneType.STAGE_2 => "Stage2",
+            };
+
+        }
         StartCoroutine(ProcessLoadScene(sceneName));
     }
 
@@ -110,6 +136,11 @@ public class GameManager : MonoBehaviour
 
 
 
+    private void SetupTutorial()
+    {
+        m_tutorialManager = Instantiate(m_tutorialManagerPrefab).GetComponent<TutorialManager>();
+
+    }
 
     void InitStageManager()
     {
@@ -138,7 +169,7 @@ public class GameManager : MonoBehaviour
     IEnumerator StartingGame()
     {
         yield return null;
-        m_playerManager.SpawnPlayablePlayer();
+        m_playerManager.SetupPlayerForRace();
         m_EnemyManager.SpawnPlayableEnemy();
     }
 

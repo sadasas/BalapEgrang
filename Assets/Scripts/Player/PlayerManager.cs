@@ -126,24 +126,30 @@ namespace Player
         #endregion
 
         #region RACE API
-        public void SpawnPlayablePlayer()
-        {
-            StartCoroutine(SpawningPlayablePlayer());
-        }
-        IEnumerator SpawningPlayablePlayer()
-        {
 
-            var parent = GameObject.FindGameObjectWithTag("RacersParent").transform;
-            m_playerController = Instantiate(m_playablePlayerPrefab, parent).GetComponent<PlayerController>();
-
+        IEnumerator SetupPlayablePlayerForRace()
+        {
             var guid = "PLAYER";
-            m_playerController.Type = Helper.GetPlayerType(m_dataPlayer.CurrentCharacterSelection);
+
+            m_playerController = SpawnPlayablePlayer();
 
             m_playerController.ID = guid;
             yield return null;
             RaceManager.s_Instance.RegisterRacer(guid, m_playerController.gameObject, true);
+        }
+        public void SetupPlayerForRace()
+        {
+            StartCoroutine(SetupPlayablePlayerForRace());
+        }
 
-            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().Player = m_playerController.transform;
+        public PlayerController SpawnPlayablePlayer()
+        {
+            var parent = GameObject.FindGameObjectWithTag("RacersParent").transform;
+            var pc = Instantiate(m_playablePlayerPrefab, parent).GetComponent<PlayerController>();
+            pc.Type = Helper.GetPlayerType(m_dataPlayer.CurrentCharacterSelection);
+
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().Player = pc.transform;
+            return pc;
         }
         #endregion
 

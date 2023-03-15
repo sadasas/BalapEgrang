@@ -21,7 +21,7 @@ namespace Player
             m_player = player;
             m_time = time;
 
-            m_hudHandler = UIManager.s_Instance.GetHUD(HUDType.ABILITY).GetComponent<AbilityHUDHandler>();
+            m_hudHandler = UIManager.s_Instance.GetHUD(HUDType.ABILITY)?.GetComponent<AbilityHUDHandler>();
         }
         public void IncreaseSpeed()
         {

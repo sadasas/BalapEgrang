@@ -14,7 +14,7 @@ public class BlockObstacle : MonoBehaviour
     /// <param name="other"></param>
     void OnTriggerEnter(Collider other)
     {
-        if (RaceManager.s_Instance.s_State != RaceState.PLAYING) return;
+        if (RaceManager.s_Instance == null || RaceManager.s_Instance.s_State != RaceState.PLAYING) return;
         if (other.CompareTag("Player"))
         {
             var player = other.GetComponent<PlayerController>();

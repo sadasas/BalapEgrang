@@ -50,13 +50,10 @@ namespace Player
         public void Idle()
         {
             m_animator.SetBool("IsMove", false);
+            m_animator.SetBool("IsJump", false);
 
         }
 
-        public void Turn(bool isTurn)
-        {
-            m_animator.SetBool("IsTurn", isTurn);
-        }
         public void OnEndAnimCallback(PlayerState state)
         {
 

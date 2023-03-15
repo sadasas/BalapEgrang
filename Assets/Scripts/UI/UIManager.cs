@@ -14,7 +14,8 @@ namespace UI
         SETTING,
         CREDIT,
         NEW_CHARACTER,
-        LOADING_SCENE
+        LOADING_SCENE,
+        TUTORIAL,
     }
     public class UIManager : MonoBehaviour
     {
@@ -31,6 +32,7 @@ namespace UI
         [SerializeField] GameObject m_rankRacerHUD;
         [SerializeField] GameObject m_newCharacterUIHUD;
         [SerializeField] GameObject m_loadSceneHUD;
+        [SerializeField] GameObject m_tutorialHUD;
 
 
 
@@ -58,6 +60,7 @@ namespace UI
 
         public GameObject GetHUD(HUDType type)
         {
+            if (!m_HUDs.ContainsKey(type)) return null;
             return m_HUDs[type];
         }
         public void DisableHUD(HUDType hud)
@@ -77,6 +80,9 @@ namespace UI
                     break;
                 case "ChooseStage":
                     InitStageHUD();
+                    break;
+                case "Tutorial":
+                    InitTutorialHUD();
                     break;
 
                 default:
@@ -142,6 +148,13 @@ namespace UI
 
         }
 
+        void InitTutorialHUD()
+        {
+            m_HUDs ??= new();
+            var tHUD = Instantiate(m_tutorialHUD, m_mainCanvas);
+            m_HUDs.Add(HUDType.TUTORIAL, tHUD);
+
+        }
     }
 
 }
