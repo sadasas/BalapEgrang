@@ -9,7 +9,8 @@ namespace Player
 
         [Header("Description Setting")]
         public string Name;
-        public GameObject Prefab;
+        public GameObject characterDisplay;
+        public GameObject characterPlayable;
 
         [Header("Movement Setting")]
         public float Speed;

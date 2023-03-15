@@ -691,7 +691,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -4565884009001823619, guid: df8c44951e7cd614fa045b6ce01e63d5, type: 3}
+  - {fileID: 2100000, guid: 52c3b76709941fb4f80b27df2ada8713, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2363,7 +2363,7 @@ GameObject:
   - component: {fileID: 8516536423147302053}
   - component: {fileID: 6750429749396755579}
   m_Layer: 0
-  m_Name: Student display
+  m_Name: Teacher display 1
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

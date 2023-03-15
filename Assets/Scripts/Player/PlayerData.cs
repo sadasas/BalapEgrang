@@ -6,6 +6,7 @@ namespace Player
     [Serializable]
     public struct PlayerData
     {
+        public int StageUnlocked;
         public string CurrentCharacterSelection;
         public List<StageData> StageRecords;
         public List<PlayerType> CharacterCollections;

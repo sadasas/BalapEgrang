@@ -30,7 +30,7 @@ namespace Player
         }
         public void ForceStopAllAnimation()
         {
-            m_animator.SetFloat("Movement", 0);
+            m_animator.SetBool("IsMove", false);
             m_animator.SetBool("IsJump", false);
         }
         public void Faster()

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Teacher
   m_EditorClassIdentifier: 
   Name: Teacher
-  Prefab: {fileID: 9041821147190965791, guid: f41a096d750ebac4f98ca442a8cf884c, type: 3}
+  Prefab: {fileID: 9041821147190965791, guid: f0e254601a1cb784381655d3fc0d6f52, type: 3}
   Speed: 1.5
   Acceleration: 0
   TurnSpeed: 0.3

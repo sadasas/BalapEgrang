@@ -114,6 +114,7 @@ namespace Race
                 var dataPlayer = m_racers[racerFinished.ID];
                 StageManager.s_Instance.CheckForNewRecord(dataPlayer.Time, dataPlayer.Rank, dataPlayer.Respawned);
                 StageManager.s_Instance.CheckReward(dataPlayer.Respawned, dataPlayer.Time, dataPlayer.Rank);
+                StageManager.s_Instance.CheckNewStage();
                 StartCoroutine(FinishingRace());
             }
             if (m_racerFinisheds == maxRacers) RaceFinished();

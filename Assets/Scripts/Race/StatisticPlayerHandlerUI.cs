@@ -21,7 +21,6 @@ namespace Race
         }
         public void UpdateText(int star, int rank, float second, int dead)
         {
-            Debug.Log(star);
             for (int i = 0; i < star; i++)
             {
                 m_stars[i].SetActive(true);

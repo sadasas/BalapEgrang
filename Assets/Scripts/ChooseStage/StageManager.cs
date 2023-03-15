@@ -42,6 +42,11 @@ public class StageManager : MonoBehaviour
 
     #region  RACE API
 
+    public void CheckNewStage()
+    {
+        if (PlayerManager.s_Instance.GetStageUnlocked() < m_index + 2) PlayerManager.s_Instance.AddNewStage();
+    }
+
     public int CalculateRating(int rank, float time)
     {
         var rate = 0;
@@ -52,7 +57,7 @@ public class StageManager : MonoBehaviour
 
         if (rate > 1)
         {
-            if (time < m_stageSelected.RateB) rate--;
+            if (time > m_stageSelected.RateA && time < m_stageSelected.RateB) rate--;
             else if (time > m_stageSelected.RateB)
             {
                 if (rate == 3 && rank > 1) rate -= 2;
