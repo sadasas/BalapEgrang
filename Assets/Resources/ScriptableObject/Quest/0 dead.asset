@@ -19,4 +19,4 @@ MonoBehaviour:
   Dead: 0
   Time: 0
   CharacterReward: {fileID: 11400000, guid: 9813cad1048108c488f77a0b7de3fdb5, type: 2}
-  CharacterImageReward: {fileID: 21300000, guid: e1f9e811cb217f840b997579932a5f7d, type: 3}
+  CharacterImageReward: {fileID: 21300000, guid: 1b2b6d8ec2b90a945b4b23e10568d2ca, type: 3}

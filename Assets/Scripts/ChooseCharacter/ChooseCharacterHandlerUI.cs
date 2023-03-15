@@ -119,7 +119,7 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
         var nextPos = m_posObj.position;
         foreach (var data in m_characterSelection)
         {
-            var newObj = Instantiate(data.Prefab, nextPos, data.Prefab.transform.rotation);
+            var newObj = Instantiate(data.characterDisplay, nextPos, data.characterDisplay.transform.rotation);
             listObj.Add(newObj);
             nextPos += m_nextPosOffset;
         }

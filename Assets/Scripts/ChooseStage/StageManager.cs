@@ -42,23 +42,36 @@ public class StageManager : MonoBehaviour
 
     #region  RACE API
 
-    public int CalculateRating(float time)
+    public void CheckNewStage()
     {
-        if (time < m_stageSelected.RateA)
+        if (PlayerManager.s_Instance.GetStageUnlocked() < m_index + 2) PlayerManager.s_Instance.AddNewStage();
+    }
+
+    public int CalculateRating(int rank, float time)
+    {
+        var rate = 0;
+
+        if (rank == 1) rate = 3;
+        else if (rank == 2) rate = 2;
+        else rate = 1;
+
+        if (rate > 1)
         {
-            return 3;
+            if (time > m_stageSelected.RateA && time < m_stageSelected.RateB) rate--;
+            else if (time > m_stageSelected.RateB)
+            {
+                if (rate == 3 && rank > 1) rate -= 2;
+                else rate--;
+            }
         }
-        else if (time < m_stageSelected.RateB)
-        {
-            return 2;
-        }
-        else return 1;
+
+        return rate;
     }
 
     public void CheckForNewRecord(float time, int rank, int dead)
     {
 
-        var rate = CalculateRating(time);
+        var rate = CalculateRating(rank, time);
         if (m_currentStageData.Rating == 0)
         {
 
@@ -101,7 +114,7 @@ public class StageManager : MonoBehaviour
         if (quest.Type == Race.DataRaceType.RATE)
         {
 
-            var rate = CalculateRating(time);
+            var rate = CalculateRating(rank, time);
             if (rate == quest.Rate)
             {
                 PlayerManager.s_Instance.AddReward(StageSelected.StageIndex);

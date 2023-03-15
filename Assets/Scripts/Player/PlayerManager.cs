@@ -39,7 +39,9 @@ namespace Player
         void LoadData()
         {
             m_dataPlayer = m_ioHandler.LoadData();
+            if (m_dataPlayer.StageUnlocked == 0) m_dataPlayer.StageUnlocked = 1;
             if (m_dataPlayer.CharacterCollections == null || m_dataPlayer.CharacterCollections.Count == 0) AddDefaultCharacter();
+
 
         }
 
@@ -107,6 +109,17 @@ namespace Player
             SaveDataPlayer();
         }
 
+        public int GetStageUnlocked()
+        {
+            return m_dataPlayer.StageUnlocked;
+        }
+
+        public void AddNewStage()
+        {
+            m_dataPlayer.StageUnlocked++;
+            SaveDataPlayer();
+        }
+
         public void AddReward(SceneType type)
         {
             m_dataPlayer.RewardUnCollecteds ??= new();
@@ -126,24 +139,32 @@ namespace Player
         #endregion
 
         #region RACE API
-        public void SpawnPlayablePlayer()
-        {
-            StartCoroutine(SpawningPlayablePlayer());
-        }
-        IEnumerator SpawningPlayablePlayer()
-        {
 
-            var parent = GameObject.FindGameObjectWithTag("RacersParent").transform;
-            m_playerController = Instantiate(m_playablePlayerPrefab, parent).GetComponent<PlayerController>();
-
+        IEnumerator SetupPlayablePlayerForRace()
+        {
             var guid = "PLAYER";
-            m_playerController.Type = Helper.GetPlayerType(m_dataPlayer.CurrentCharacterSelection);
+
+            m_playerController = SpawnPlayablePlayer();
 
             m_playerController.ID = guid;
             yield return null;
             RaceManager.s_Instance.RegisterRacer(guid, m_playerController.gameObject, true);
+        }
+        public void SetupPlayerForRace()
+        {
+            StartCoroutine(SetupPlayablePlayerForRace());
+        }
 
-            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().Player = m_playerController.transform;
+        public PlayerController SpawnPlayablePlayer()
+        {
+
+            var pp = Helper.GetPlayerType(m_dataPlayer.CurrentCharacterSelection).characterPlayable;
+            var parent = GameObject.FindGameObjectWithTag("RacersParent").transform;
+            var pc = Instantiate(pp, parent).GetComponent<PlayerController>();
+            pc.Type = Helper.GetPlayerType(m_dataPlayer.CurrentCharacterSelection);
+
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().Player = pc.transform;
+            return pc;
         }
         #endregion
 

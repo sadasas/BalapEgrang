@@ -17,9 +17,9 @@ MonoBehaviour:
   Description: medium stage
   Image: {fileID: 21300000, guid: d441ba3fe194ca34ba37d4916d36b14d, type: 3}
   Level: {fileID: 11400000, guid: 2ab1cfa69fe16c84fbc51be449a6f0a0, type: 2}
-  RateA: 20
-  RateB: 45
-  RateC: 60
+  RateA: 40
+  RateB: 55
+  RateC: 65
   TimeCTEObstacle: 2
   IncrementCTEObstacle: 2.2
   Quests:

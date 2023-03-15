@@ -114,6 +114,7 @@ namespace Race
                 var dataPlayer = m_racers[racerFinished.ID];
                 StageManager.s_Instance.CheckForNewRecord(dataPlayer.Time, dataPlayer.Rank, dataPlayer.Respawned);
                 StageManager.s_Instance.CheckReward(dataPlayer.Respawned, dataPlayer.Time, dataPlayer.Rank);
+                StageManager.s_Instance.CheckNewStage();
                 StartCoroutine(FinishingRace());
             }
             if (m_racerFinisheds == maxRacers) RaceFinished();
@@ -225,7 +226,7 @@ namespace Race
             statisticPlayerHUD.gameObject.SetActive(true);
             var dataRacePlayer = m_racers["PLAYER"];
 
-            var rating = StageManager.s_Instance.CalculateRating(dataRacePlayer.Time);
+            var rating = StageManager.s_Instance.CalculateRating(dataRacePlayer.Rank, dataRacePlayer.Time);
             statisticPlayerHUD.UpdateText(rating, dataRacePlayer.Rank, dataRacePlayer.Time, dataRacePlayer.Respawned
             );
 

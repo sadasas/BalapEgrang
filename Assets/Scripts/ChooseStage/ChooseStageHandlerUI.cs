@@ -6,6 +6,7 @@ using Player;
 public class ChooseStageHandlerUI : MonoBehaviour
 {
     int m_currentSelection = 0;
+    int m_stageUncloked = 0;
     Stage[] m_stages;
 
     [Header("Record Setting")]
@@ -32,9 +33,14 @@ public class ChooseStageHandlerUI : MonoBehaviour
     [SerializeField] Image m_rewardImg;
     [SerializeField] TextMeshProUGUI m_titleRewardText;
 
+
+    [SerializeField] GameObject m_lockHUD;
+    [SerializeField] GameObject m_selectBtn;
+
     void Start()
     {
         m_stages = StageManager.s_Instance.GetStages();
+        m_stageUncloked = PlayerManager.s_Instance.GetStageUnlocked();
         ShowCurrentSelection();
     }
 
@@ -95,8 +101,18 @@ public class ChooseStageHandlerUI : MonoBehaviour
 
     }
 
+    bool IsStageLocked()
+    {
+        if (m_stageUncloked > m_currentSelection) return false;
+        return true;
+
+    }
+
     void ShowCurrentSelection()
     {
+        m_lockHUD.SetActive(false);
+        m_selectBtn.SetActive(true);
+
         var data = m_stages[m_currentSelection];
         m_nameStageText.text = data.Name;
         m_stageImg.sprite = data.Image;
@@ -107,6 +123,14 @@ public class ChooseStageHandlerUI : MonoBehaviour
         else m_record.SetActive(false);
 
         CheckQuest();
+
+        if (IsStageLocked())
+        {
+            m_lockHUD.SetActive(true);
+            m_selectBtn.SetActive(false);
+
+
+        }
     }
 
     void ShowRecordStage()
