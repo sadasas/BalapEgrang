@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UI;
 using UnityEngine;
 using System.Linq;
+using System;
 
 namespace Race
 {
@@ -143,20 +144,23 @@ namespace Race
 
         void CalculateRankPlayer()
         {
-            var rank = 1;
-            var disPlayer = m_racers["PLAYER"].Distance;
-            foreach (var otherDis in m_racers.Values)
+            var dataRacer = m_racers.Values.Select(value => value.Distance).ToArray();
+            Array.Sort(dataRacer);
+            Array.Reverse(dataRacer);
+
+            for (int i = 0; i < dataRacer.Length; i++)
             {
-                if (!otherDis.IsPlayer)
+                if (dataRacer[i] == m_racers["PLAYER"].Distance)
                 {
-                    if (otherDis.Distance > disPlayer) rank++;
-                    else if (rank > 1) rank--;
+
+                    var rankHandler = UIManager.s_Instance.GetHUD(HUDType.RANK_RACER).GetComponent<RankRacerHandlerUI>();
+                    rankHandler.gameObject.SetActive(true);
+                    rankHandler.UpdateRank(i + 1);
+
                 }
 
             }
-            var rankHandler = UIManager.s_Instance.GetHUD(HUDType.RANK_RACER).GetComponent<RankRacerHandlerUI>();
-            rankHandler.gameObject.SetActive(true);
-            rankHandler.UpdateRank(rank);
+
         }
 
         void TrackRacer(string key)

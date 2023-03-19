@@ -18,7 +18,7 @@ namespace Enemy
     public class EnemyManager : MonoBehaviour
     {
         const int max_EnemySpawned = 2;
-        List<AIController> m_enemys;
+        [SerializeField] List<AIController> m_enemys;
         [SerializeField] GameObject m_playableEnemy;
 
         private void Start()
