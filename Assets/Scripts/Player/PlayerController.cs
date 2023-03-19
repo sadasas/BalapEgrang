@@ -78,5 +78,15 @@ namespace Player
         {
             m_animatonBehaviour.OnEndAnimCallback(state);
         }
+
+				public void Reposition()
+				{
+					Transform pos;
+					if(m_dataState.CurrentPost == Pos.LEFT) pos = RaceManager.s_Instance.StartPos[0];
+					else if(m_dataState.CurrentPost == Pos.CENTER) pos = RaceManager.s_Instance.StartPos[1];
+					else pos = RaceManager.s_Instance.StartPos[2];
+
+					transform.position = new Vector3(pos.position.x,transform.position.y,transform.position.z);
+				}
     }
 }

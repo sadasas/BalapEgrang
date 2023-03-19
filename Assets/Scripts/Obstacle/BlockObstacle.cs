@@ -19,6 +19,7 @@ public class BlockObstacle : MonoBehaviour
         {
             var player = other.GetComponent<PlayerController>();
             player.DamageBehaviour.Crash(transform);
+            player.Reposition();
 
             RaceManager.s_Instance.RacerCrashed(player.GetComponent<IRacer>());
         }

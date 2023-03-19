@@ -54,7 +54,7 @@ public class TutorialManager : MonoBehaviour
 
         m_panel.SetActive(false);
         PlayerPrefs.SetInt("Tutorial", 1);
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(2);
         GameManager.s_Instance.LoadScene(SceneType.STAGE_1);
 
     }

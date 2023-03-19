@@ -9,6 +9,7 @@ namespace Player
         float m_turnTreshold;
         float m_turnMinLength;
         bool m_isMoved;
+        private Vector2 tdir;
 
         public InputBehaviour(float turnTreshold, float turnMinLength)
         {
@@ -38,13 +39,8 @@ namespace Player
             }
             else if (t.phase == TouchPhase.Moved)
             {
-                var tdir = t.deltaPosition.normalized;
-
-                if (m_movePressTime > 0 || MathF.Abs(tdir.x) < m_turnMinLength || MathF.Abs(tdir.y) > 0.3)
-                    return;
-                m_movePressTime = m_turnTreshold;
-                OnSwipe?.Invoke(tdir);
                 m_isMoved = true;
+                tdir = t.deltaPosition.normalized;
             }
             else if (t.phase == TouchPhase.Began)
             {
@@ -54,6 +50,18 @@ namespace Player
             {
                 if (!m_isMoved)
                     OnRelease?.Invoke();
+                else
+                {
+
+                    if (m_movePressTime <= 0 || MathF.Abs(tdir.x) > m_turnMinLength || MathF.Abs(tdir.y) < 0.3)
+                    {
+                        m_movePressTime = m_turnTreshold;
+                        OnSwipe?.Invoke(tdir);
+
+                    }
+
+                }
+
                 m_isMoved = false;
             }
         }
