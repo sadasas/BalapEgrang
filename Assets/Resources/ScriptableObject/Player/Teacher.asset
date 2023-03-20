@@ -20,7 +20,7 @@ MonoBehaviour:
   TurnSpeed: 0.3
   TurnRange: 2.9
   DistanceMove: 1
-  RespawnPosDis: 3
+  RespawnPosDis: 1
   MaxPushVal: 2
   AbilityTime: 2
   BgUI: {r: 0.48406905, g: 0.9245283, b: 0.5665712, a: 1}

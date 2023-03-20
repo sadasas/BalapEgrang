@@ -28,8 +28,11 @@ namespace Player
         public void Crash(Transform obstacle)
         {
             m_movementBehaviour.IsMoveAllowed = false;
+            m_movementBehaviour.ForceStopMovement();
             m_dataState.State = PlayerState.CRASHING;
             m_obstacle = obstacle;
+
+
             m_animationBehaviour.Crash();
 
         }

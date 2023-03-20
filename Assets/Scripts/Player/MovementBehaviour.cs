@@ -62,7 +62,21 @@ namespace Player
         public void Update()
         {
             if (m_dataState.State == PlayerState.IDLE) Idle();
+
         }
+
+
+        public void ForceStopMovement()
+        {
+            if (m_currentCoro != null)
+            {
+                m_mono.StopCoroutine(m_currentCoro);
+                m_currentCoro = null;
+
+                m_isTurning = false;
+            }
+        }
+
         public void IncreaseSpeed(int speed)
         {
 
@@ -110,28 +124,31 @@ namespace Player
         {
             if (!IsMoveAllowed || m_isTurning) return;
 
+
             if (m_currentCoro != null)
             {
                 m_mono.StopCoroutine(m_currentCoro);
                 Idle();
             }
             m_dataState.State = PlayerState.TURNING;
-            var nextPos = (input.x < 0 ? Pos.LEFT : Pos.RIGHT);
+            var dir = (input.x < 0 ? Pos.LEFT : Pos.RIGHT);
 
-            if (nextPos == Pos.RIGHT && m_dataState.CurrentPost != Pos.RIGHT)
+            Pos nextPosEnum;
+            if (dir == Pos.RIGHT && m_dataState.CurrentPost != Pos.RIGHT)
             {
-                m_dataState.CurrentPost = m_dataState.CurrentPost == Pos.CENTER ? Pos.RIGHT : Pos.CENTER;
-                m_currentCoro = m_mono.StartCoroutine(Turning(m_turnRange));
+                nextPosEnum = m_dataState.CurrentPost == Pos.CENTER ? Pos.RIGHT : Pos.CENTER;
+                m_currentCoro = m_mono.StartCoroutine(Turning(nextPosEnum, m_turnRange));
             }
-            else if (nextPos == Pos.LEFT && m_dataState.CurrentPost != Pos.LEFT)
+            else if (dir == Pos.LEFT && m_dataState.CurrentPost != Pos.LEFT)
             {
-                m_dataState.CurrentPost = m_dataState.CurrentPost == Pos.CENTER ? Pos.LEFT : Pos.CENTER;
-                m_currentCoro = m_mono.StartCoroutine(Turning(-m_turnRange));
+                nextPosEnum = m_dataState.CurrentPost == Pos.CENTER ? Pos.LEFT : Pos.CENTER;
+                m_currentCoro = m_mono.StartCoroutine(Turning(nextPosEnum, -m_turnRange));
             }
         }
 
-        IEnumerator Turning(float range)
+        IEnumerator Turning(Pos nextPosEnum, float range)
         {
+            m_isTurning = true;
             m_animationBehaviour.Jump(true);
             var nextPos = new Vector3(m_player.position.x + range, m_player.position.y, m_player.position.z + 0.5f);
             if (range > 0)
@@ -161,6 +178,7 @@ namespace Player
                     yield return null;
                 }
             }
+            m_dataState.CurrentPost = nextPosEnum;
             m_animationBehaviour.Jump(false);
             m_currentCoro = null;
             m_isTurning = false;

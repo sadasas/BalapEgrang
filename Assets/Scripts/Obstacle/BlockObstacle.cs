@@ -6,6 +6,8 @@ using UnityEngine;
 public class BlockObstacle : MonoBehaviour
 {
 
+    [SerializeField] Pos m_pos;
+
     /// <summary>
     /// TODO:
     /// calculating what happen when crashing in here
@@ -19,6 +21,7 @@ public class BlockObstacle : MonoBehaviour
         {
             var player = other.GetComponent<PlayerController>();
             player.DamageBehaviour.Crash(transform);
+            player.Reposition(m_pos);
 
             RaceManager.s_Instance.RacerCrashed(player.GetComponent<IRacer>());
         }
