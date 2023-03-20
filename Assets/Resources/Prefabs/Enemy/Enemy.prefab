@@ -330,7 +330,7 @@ MonoBehaviour:
   m_turnSpeed: 0.2
   m_turnRange: 2.8
   m_rayLength: 2
-  m_rayHeight: 1
+  m_rayHeight: 0.5
   m_obstacleLayer:
     serializedVersion: 2
     m_Bits: 64

@@ -112,6 +112,7 @@ namespace Race
 
             if (racerFinished.ID == "PLAYER")
             {
+                m_racers["PLAYER"].GameObject.GetComponent<PlayerController>().MovementBehaviour.ForceStopMovement();
                 var dataPlayer = m_racers[racerFinished.ID];
                 StageManager.s_Instance.CheckForNewRecord(dataPlayer.Time, dataPlayer.Rank, dataPlayer.Respawned);
                 StageManager.s_Instance.CheckReward(dataPlayer.Respawned, dataPlayer.Time, dataPlayer.Rank);
@@ -206,13 +207,15 @@ namespace Race
             while (countDown > 0)
             {
                 countDownHandler.gameObject.SetActive(true);
-                countDownHandler.UpdateCountDown(countDown);
+                countDownHandler.UpdateCountDown(countDown.ToString());
                 countDown--;
                 yield return new WaitForSeconds(1f);
                 countDownHandler.gameObject.SetActive(false);
                 yield return new WaitForSeconds(1f);
                 countDownHandler.gameObject.SetActive(true);
             }
+            countDownHandler.UpdateCountDown("GO!!");
+            yield return new WaitForSeconds(0.7f);
             UIManager.s_Instance.DisableHUD(HUDType.COUNTDOWN_START);
 
             s_State = RaceState.PLAYING;
