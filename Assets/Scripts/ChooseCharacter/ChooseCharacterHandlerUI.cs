@@ -24,10 +24,10 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
     [SerializeField] Transform m_posObj;
     [SerializeField] Vector3 m_nextPosOffset;
     [SerializeField] TextMeshProUGUI m_nameCharacterText;
-    [SerializeField] TextMeshProUGUI m_speedText;
-    [SerializeField] TextMeshProUGUI m_accelerationText;
-    [SerializeField] TextMeshProUGUI m_abilityText;
-    [SerializeField] TextMeshProUGUI m_turnSpeedText;
+    [SerializeField] Slider m_speedText;
+    [SerializeField] Slider m_accelerationText;
+    [SerializeField] Slider m_abilityText;
+    [SerializeField] Slider m_turnSpeedText;
     [SerializeField] GameObject m_lock;
     [SerializeField] GameObject m_selectBtn;
     [SerializeField] float m_turnSpeed;
@@ -133,10 +133,10 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
         var isLock = CheckLock(data.Name);
 
         m_nameCharacterText.text = data.Name;
-        m_speedText.text = data.Speed.ToString();
-        m_accelerationText.text = data.Acceleration.ToString();
-        m_turnSpeedText.text = data.TurnSpeed.ToString();
-        m_abilityText.text = data.AbilityTime.ToString();
+        m_speedText.value = data.Speed;
+        // m_accelerationText.text = data.Acceleration.ToString();
+        m_turnSpeedText.value = data.TurnSpeed;
+        m_abilityText.value = data.AbilityTime;
 
         if (m_currentObj)
         {
@@ -153,10 +153,10 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
             m_currentObj.transform.position = m_posObj.position;
 
         }
-				else
-				{
-					m_objSelection[m_currentSelection].transform.position += m_nextPosOffset;
-				}
+        else
+        {
+            m_objSelection[m_currentSelection].transform.position += m_nextPosOffset;
+        }
 
         m_backgroundUI.color = m_characterSelection[m_currentSelection].BgUI;
         m_backgroundCharacter.color = m_characterSelection[m_currentSelection].BgCharacter;

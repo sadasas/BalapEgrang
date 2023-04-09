@@ -20,7 +20,6 @@ namespace Obstacle
             if (m_racerTriggered.Count > 0 && m_racerTriggered.Contains(other.gameObject)) return;
 
             m_racerTriggered.Add(other.gameObject);
-            Debug.Log(m_racerTriggered.Count);
             if (other.CompareTag("Player"))
             {
                 UIManager.s_Instance.ForceHUD(HUDType.CTE);

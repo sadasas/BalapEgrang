@@ -482,6 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a240721529754094886270134df7aa0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsTrackAllowed: 1
   m_smoothDamp: 0.5
   m_offsetX: 5
 --- !u!114 &696445874
@@ -1432,6 +1433,7 @@ GameObject:
   - component: {fileID: 6583085015390233610}
   - component: {fileID: 6672853191995727369}
   - component: {fileID: 948157387346617060}
+  - component: {fileID: 6672853191995727370}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -1577,8 +1579,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1438211287202528623}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.53604, y: -1.1, z: 74.27}
-  m_LocalScale: {x: 1.9278139, y: 1.657, z: 1}
+  m_LocalPosition: {x: 0.32368, y: -1.1, z: 74.27}
+  m_LocalScale: {x: 2.144693, y: 1.657, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6583085015390233610}
@@ -1787,6 +1789,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 91337236383898948}
   m_Mesh: {fileID: -462981019419857548, guid: 1f4ecee9a478a0248ade11b179792762, type: 3}
+--- !u!114 &6672853191995727370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91337236383898948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d07c3cc1293854f80206a63424f2fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_camera: {fileID: 696445873}
 --- !u!23 &7588658245173747840
 MeshRenderer:
   m_ObjectHideFlags: 0
