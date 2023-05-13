@@ -7,7 +7,6 @@ using UI;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System;
 
 public enum SceneType
 {
@@ -115,6 +114,7 @@ public class GameManager : MonoBehaviour
                 SceneType.CHOOSE_STAGE => "ChooseStage",
                 SceneType.STAGE_1 => "Stage1",
                 SceneType.STAGE_2 => "Stage2",
+                _ => ""
             };
 
         }

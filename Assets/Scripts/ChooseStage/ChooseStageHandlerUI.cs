@@ -3,6 +3,8 @@ using TMPro;
 using Utility;
 using UnityEngine.UI;
 using Player;
+using BalapEgrang.Sound;
+
 public class ChooseStageHandlerUI : MonoBehaviour
 {
     int m_currentSelection = 0;
@@ -84,6 +86,8 @@ public class ChooseStageHandlerUI : MonoBehaviour
     {
         PlayerManager.s_Instance.CollectReward(m_stages[m_currentSelection].StageIndex);
         PlayerManager.s_Instance.AddNewCharacter(m_stages[m_currentSelection].Quests[0].CharacterReward);
+
+        SoundManager.s_Instance.PlaySFX(SFXType.NEW_CHARACTER);
 
         m_questAvailableHUD.SetActive(false);
         m_questCollectedHUD.SetActive(true);

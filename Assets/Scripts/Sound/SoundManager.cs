@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace BalapEgrang.Sound
 {
@@ -16,10 +17,12 @@ namespace BalapEgrang.Sound
     }
     public enum SFXType
     {
-        BTNCLICK,
-        PLAYERFALL,
-        NEWCHARACTER,
-
+        BTN_CLICK,
+        PLAYER_FALL,
+        NEW_CHARACTER,
+        POWER_UP,
+        WIN,
+        COUNTDOWN
     }
 
     public class SoundManager : MonoBehaviour
@@ -37,6 +40,10 @@ namespace BalapEgrang.Sound
         [SerializeField] AudioClip m_btnClickSFX;
         [SerializeField] AudioClip m_playerRunSFX;
         [SerializeField] AudioClip m_playerFallSFX;
+        [SerializeField] AudioClip m_NewCharacterSFX;
+        [SerializeField] AudioClip m_PowerUpSFX;
+        [SerializeField] AudioClip m_winSFX;
+        [SerializeField] AudioClip m_countDownSFX;
 
 
         public bool IsBGMMute;
@@ -45,15 +52,39 @@ namespace BalapEgrang.Sound
         private void Awake()
         {
             if (s_Instance != null) Destroy(gameObject);
-            else s_Instance = this;
+            else
+            {
+                s_Instance = this;
+                DontDestroyOnLoad(gameObject);
+
+            }
         }
 
 
         private void Start()
         {
-            // LoadPlayerSetting();
+            LoadPlayerSetting();
+            SceneManager.sceneLoaded += OnSceneLoaded;
 
-            if (!IsBGMMute) PlayBGM(BGMType.MAINMENU);
+            PlayBGM(BGMType.MAINMENU);
+
+        }
+
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            switch (scene.name)
+            {
+                case "MainMenu":
+                    PlayBGM(BGMType.MAINMENU);
+                    break;
+                case "Stage1":
+                case "Stage2":
+                    PlayBGM(BGMType.RACE);
+                    break;
+                default:
+                    break;
+            }
         }
 
         void LoadPlayerSetting()
@@ -87,9 +118,12 @@ namespace BalapEgrang.Sound
             if (IsSFXMute) return;
             var audioClip = (type) switch
             {
-                SFXType.BTNCLICK => m_btnClickSFX,
-                SFXType.PLAYERFALL => m_playerFallSFX,
-                // SFXType.NEWCHARACTER => m_newCharacterSFX,
+                SFXType.BTN_CLICK => m_btnClickSFX,
+                SFXType.PLAYER_FALL => m_playerFallSFX,
+                SFXType.NEW_CHARACTER => m_NewCharacterSFX,
+                SFXType.POWER_UP => m_PowerUpSFX,
+                SFXType.WIN => m_winSFX,
+                SFXType.COUNTDOWN => m_countDownSFX,
                 _ => null
             };
 

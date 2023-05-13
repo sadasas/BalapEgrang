@@ -1,5 +1,6 @@
 using Player;
 using Race;
+using BalapEgrang.Sound;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -53,11 +54,13 @@ namespace Obstacle
             {
                 m_player.GetComponent<PlayerController>().MovementBehaviour.IsMoveAllowed = true;
                 m_player.GetComponent<PlayerController>().AbilityBehaviour.IncreaseSpeed();
+                SoundManager.s_Instance.PlaySFX(SFXType.POWER_UP);
 
             }
             else
             {
                 FailMatching();
+                SoundManager.s_Instance.PlaySFX(SFXType.PLAYER_FALL);
 
             }
 

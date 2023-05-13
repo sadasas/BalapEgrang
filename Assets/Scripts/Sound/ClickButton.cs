@@ -6,7 +6,7 @@ public class ClickButton : MonoBehaviour
 {
     public void PlaySfx()
     {
-        SoundManager.s_Instance.PlaySFX(SFXType.BTNCLICK);
+        SoundManager.s_Instance.PlaySFX(SFXType.BTN_CLICK);
     }
 
 }

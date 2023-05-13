@@ -1,4 +1,5 @@
 ﻿using Player;
+using BalapEgrang.Sound;
 using System.Collections;
 using System.Collections.Generic;
 using UI;
@@ -206,6 +207,7 @@ namespace Race
             var countDown = 3;
             while (countDown > 0)
             {
+                SoundManager.s_Instance.PlaySFX(SFXType.COUNTDOWN);
                 countDownHandler.gameObject.SetActive(true);
                 countDownHandler.UpdateCountDown(countDown.ToString());
                 countDown--;
@@ -232,8 +234,9 @@ namespace Race
             var statisticPlayerHUD = UIManager.s_Instance.GetHUD(HUDType.STATISTIC_PLAYER_RACE_FINISHED).GetComponent<StatisticPlayerHandlerUI>();
             statisticPlayerHUD.gameObject.SetActive(true);
             var dataRacePlayer = m_racers["PLAYER"];
-
+            if (dataRacePlayer.Rank == 1) SoundManager.s_Instance.PlaySFX(SFXType.WIN);
             var rating = StageManager.s_Instance.CalculateRating(dataRacePlayer.Rank, dataRacePlayer.Time);
+
             statisticPlayerHUD.UpdateText(rating, dataRacePlayer.Rank, dataRacePlayer.Time, dataRacePlayer.Respawned
             );
 

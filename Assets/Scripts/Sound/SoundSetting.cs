@@ -12,6 +12,11 @@ public class SoundSetting : MonoBehaviour
     [SerializeField] Sprite m_bgmOnSprite;
     [SerializeField] Sprite m_bgmOffSprite;
 
+    void Start()
+    {
+        m_musicImg.sprite = SoundManager.s_Instance.IsBGMMute ? m_bgmOffSprite : m_bgmOnSprite;
+    }
+
     public void ToggleMusic()
     {
         SoundManager.s_Instance.IsBGMMute = !SoundManager.s_Instance.IsBGMMute;

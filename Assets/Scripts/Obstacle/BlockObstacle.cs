@@ -1,3 +1,4 @@
+using BalapEgrang.Sound;
 using Enemy;
 using Player;
 using Race;
@@ -22,6 +23,7 @@ public class BlockObstacle : MonoBehaviour
             var player = other.GetComponent<PlayerController>();
             player.DamageBehaviour.Crash(transform);
             player.Reposition(m_pos);
+            SoundManager.s_Instance.PlaySFX(SFXType.PLAYER_FALL);
 
             RaceManager.s_Instance.RacerCrashed(player.GetComponent<IRacer>());
         }
