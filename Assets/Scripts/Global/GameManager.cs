@@ -1,11 +1,13 @@
 ﻿using Enemy;
 using Player;
+using BalapEgrang.Sound;
 using Race;
 using System.Collections;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public enum SceneType
 {
@@ -32,6 +34,7 @@ public class GameManager : MonoBehaviour
     EnemyManager m_EnemyManager;
     StageManager m_stageManager;
     TutorialManager m_tutorialManager;
+    SoundManager m_soundManager;
 
     [SerializeField] GameObject m_playerManagerPrefab;
     [SerializeField] GameObject m_stageManagerPrefab;
@@ -39,7 +42,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject m_raceManagerPrefab;
     [SerializeField] GameObject m_enemyManagerPrefab;
     [SerializeField] GameObject m_tutorialManagerPrefab;
-
+    [SerializeField] GameObject m_soundManagerPrefab;
 
     void Awake()
     {
@@ -68,8 +71,11 @@ public class GameManager : MonoBehaviour
 
         InitPlayerManager();
         InitUIManager();
+        InitSoundManager();
 
     }
+
+
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         switch (scene.name)
@@ -152,6 +158,13 @@ public class GameManager : MonoBehaviour
 
         m_playerManager = Instantiate(m_playerManagerPrefab).GetComponent<PlayerManager>();
     }
+
+
+    private void InitSoundManager()
+    {
+        m_soundManager = Instantiate(m_soundManagerPrefab).GetComponent<SoundManager>();
+    }
+
 
     void InitUIManager()
     {
