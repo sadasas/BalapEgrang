@@ -1,4 +1,5 @@
 ﻿using Player;
+using BalapEgrang.Player;
 using BalapEgrang.Sound;
 using System.Collections;
 using System.Collections.Generic;
@@ -219,6 +220,8 @@ namespace Race
             countDownHandler.UpdateCountDown("GO!!");
             yield return new WaitForSeconds(0.7f);
             UIManager.s_Instance.DisableHUD(HUDType.COUNTDOWN_START);
+            UIManager.s_Instance.ForceHUD(HUDType.RANDOM_BAR);
+            UIManager.s_Instance.GetHUD(HUDType.RANDOM_BAR).GetComponent<MatchBarUIHandler>().SetPlayer(m_racers["PLAYER"].GameObject);
 
             s_State = RaceState.PLAYING;
             foreach (var racer in m_racers)

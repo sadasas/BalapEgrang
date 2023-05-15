@@ -21,7 +21,6 @@ namespace Player
         PlayerDataState m_dataState;
         public InputBehaviour InputBehaviour;
         public MovementBehaviour MovementBehaviour;
-        public AbilityBehaviour AbilityBehaviour;
         PlayerAnimationBehaviour m_animatonBehaviour;
         public DamageBehaviour DamageBehaviour { get; private set; }
 
@@ -43,9 +42,8 @@ namespace Player
             m_dataState ??= new();
             m_animatonBehaviour = new(m_walkLerpTime, this.GetComponent<Animator>(), m_dataState);
             InputBehaviour = new(m_turnTreshold, m_turnMinLength);
-            MovementBehaviour = new(transform, InputBehaviour, Type.Speed, Type.TurnSpeed, Type.TurnRange, m_animatonBehaviour, m_dataState, Type.DistanceMove);
+            MovementBehaviour = new(transform, InputBehaviour, Type.Speed, Type.Acceleration, Type.DistanceMove, Type.TurnSpeed, Type.TurnRange, m_animatonBehaviour, m_dataState);
             DamageBehaviour = new(transform, Type.RespawnPosDis, MovementBehaviour, m_animatonBehaviour, m_dataState);
-            AbilityBehaviour = new(Type.MaxPushVal, this, Type.AbilityTime, MovementBehaviour);
         }
 
         void Update()

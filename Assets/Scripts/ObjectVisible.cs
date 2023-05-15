@@ -4,6 +4,7 @@ using System.Collections;
 public class ObjectVisible : MonoBehaviour
 {
     [SerializeField] CameraController m_camera;
+    [SerializeField] float m_tresholdStopCamera;
 
     void OnBecameVisible()
     {
@@ -12,7 +13,7 @@ public class ObjectVisible : MonoBehaviour
 
     IEnumerator StopingCameraMove()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(m_tresholdStopCamera);
         m_camera.IsTrackAllowed = false;
     }
 

@@ -16,7 +16,6 @@ public class StageManager : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("awake");
         if (s_Instance) Destroy(gameObject);
         s_Instance = this;
         DontDestroyOnLoad(gameObject);

@@ -52,3 +52,4 @@ MonoBehaviour:
   m_newCharacterUIHUD: {fileID: 3766953144858714553, guid: 0b16eb9feabe0384aadc5fb9fe4e8b05, type: 3}
   m_loadSceneHUD: {fileID: 8829361493650994976, guid: 2ee4052e3b5f52d44bd12fbb197bfb19, type: 3}
   m_tutorialHUD: {fileID: 1351197380504989602, guid: c0c0a32dc6324394fbabb52ad20b2094, type: 3}
+  m_randomBarHUD: {fileID: 7840730480620711848, guid: c472646020d85ec44a0a2299ffc89395, type: 3}

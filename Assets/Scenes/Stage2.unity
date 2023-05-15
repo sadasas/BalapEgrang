@@ -2069,6 +2069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_camera: {fileID: 696445873}
+  m_tresholdStopCamera: 3
 --- !u!23 &7588658245173747840
 MeshRenderer:
   m_ObjectHideFlags: 0
