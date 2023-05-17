@@ -2453,9 +2453,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_turnTreshold: 0.7
-  m_turnMinLength: 0.9
+  m_turnMinLength: 100
   m_walkLerpTime: 0.2
-  Type: {fileID: 0}
 --- !u!1 &9133134159190906180
 GameObject:
   m_ObjectHideFlags: 0

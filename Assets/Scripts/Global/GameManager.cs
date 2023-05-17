@@ -55,7 +55,6 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
         {
             PlayerPrefs.SetInt("Tutorial", 0);
-            Debug.Log("tutoriel reset");
         }
     }
 
@@ -98,12 +97,12 @@ public class GameManager : MonoBehaviour
     public void LoadScene(SceneType type)
     {
         var sceneName = "";
-        if (type == SceneType.STAGE_1)
-        {
-            var tutorial = PlayerPrefs.GetInt("Tutorial");
-            if (tutorial == 0)
-                sceneName = "Tutorial";
-        }
+        // if (type == SceneType.STAGE_1)
+        // {
+        //     var tutorial = PlayerPrefs.GetInt("Tutorial");
+        //     if (tutorial == 0)
+        //         sceneName = "Tutorial";
+        // }
 
         if (sceneName == "")
         {

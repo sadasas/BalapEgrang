@@ -49,9 +49,7 @@ namespace Player
 
         public void Idle()
         {
-            m_animator.SetBool("IsMove", false);
-            m_animator.SetBool("IsJump", false);
-
+            ForceStopAllAnimation();
         }
 
         public void OnEndAnimCallback(PlayerState state)

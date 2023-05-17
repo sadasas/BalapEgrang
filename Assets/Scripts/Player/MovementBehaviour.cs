@@ -32,6 +32,7 @@ namespace Player
         float m_perfectMove;
         float m_goodMove;
         float m_speed;
+        float m_defaultSpeed;
         float m_acceleration;
         float m_turnRange;
         float m_turnSpeed;
@@ -53,6 +54,7 @@ namespace Player
             m_player = player;
             m_mono = player.GetComponent<MonoBehaviour>();
             m_inputCallback = inputCallback;
+            m_defaultSpeed = speed;
             m_speed = speed;
             m_acceleration = acceleration;
             m_distanceMove = distanceMove;
@@ -94,7 +96,7 @@ namespace Player
         void DecreaseSpeed()
         {
             m_animationBehaviour.ResetSpeed();
-            m_speed = m_speed / m_acceleration;
+            m_speed = m_defaultSpeed;
         }
 
 
@@ -114,12 +116,13 @@ namespace Player
         {
 
             if (!IsMoveAllowed) return;
+            m_currentTypeMove = moveType;
             if (m_currentCoro != null)
             {
                 m_countdownMove += m_distanceMove;
                 if (moveType == MoveType.PERFECT)
                 {
-                    if (m_currentTypeMove != MoveType.PERFECT)
+                    if (m_speed == m_defaultSpeed)
                     {
                         IncreaseSpeed();
                     }
@@ -127,14 +130,13 @@ namespace Player
                 }
                 else
                 {
-                    m_currentTypeMove = moveType;
                     DecreaseSpeed();
                 }
 
             }
             else
             {
-                m_currentTypeMove = moveType;
+                if (moveType == MoveType.GOOD && m_speed > m_defaultSpeed) m_speed = m_defaultSpeed;
                 m_countdownMove = m_distanceMove;
                 m_currentCoro = m_mono.StartCoroutine(Moving());
             }
@@ -142,6 +144,7 @@ namespace Player
         }
         IEnumerator Moving()
         {
+
             if (m_currentTypeMove == MoveType.PERFECT)
             {
                 IncreaseSpeed();
@@ -155,7 +158,7 @@ namespace Player
                 yield return null;
 
             }
-            if (m_currentTypeMove == MoveType.PERFECT)
+            if (m_speed > m_defaultSpeed)
             {
                 DecreaseSpeed();
             }
@@ -164,7 +167,7 @@ namespace Player
         }
 
 
-        void Turn(Vector3 input)
+        void Turn(Vector2 input)
         {
             if (!IsMoveAllowed || m_isTurning) return;
 
@@ -172,7 +175,7 @@ namespace Player
             if (m_currentCoro != null)
             {
                 m_mono.StopCoroutine(m_currentCoro);
-                Idle();
+                m_animationBehaviour.ForceStopAllAnimation();
             }
             m_dataState.State = PlayerState.TURNING;
             var dir = (input.x < 0 ? Pos.LEFT : Pos.RIGHT);
@@ -181,17 +184,19 @@ namespace Player
             if (dir == Pos.RIGHT && m_dataState.CurrentPost != Pos.RIGHT)
             {
                 nextPosEnum = m_dataState.CurrentPost == Pos.CENTER ? Pos.RIGHT : Pos.CENTER;
-                m_currentCoro = m_mono.StartCoroutine(Turning(nextPosEnum, m_turnRange));
+                m_currentCoro = m_mono.StartCoroutine(Turning(nextPosEnum, input.x));
             }
             else if (dir == Pos.LEFT && m_dataState.CurrentPost != Pos.LEFT)
             {
                 nextPosEnum = m_dataState.CurrentPost == Pos.CENTER ? Pos.LEFT : Pos.CENTER;
-                m_currentCoro = m_mono.StartCoroutine(Turning(nextPosEnum, -m_turnRange));
+                m_currentCoro = m_mono.StartCoroutine(Turning(nextPosEnum, input.x));
             }
         }
 
-        IEnumerator Turning(Pos nextPosEnum, float range)
+        IEnumerator Turning(Pos nextPosEnum, float xdir)
         {
+
+            var range = xdir < 0 ? -2.5f : 2.5f;
             m_isTurning = true;
             m_animationBehaviour.Jump(true);
             var nextPos = new Vector3(m_player.position.x + range, m_player.position.y, m_player.position.z + 0.5f);

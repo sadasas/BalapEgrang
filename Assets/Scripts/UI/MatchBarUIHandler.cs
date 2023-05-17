@@ -3,6 +3,7 @@ using Utility;
 using Player;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace BalapEgrang.Player
 {
@@ -20,6 +21,7 @@ namespace BalapEgrang.Player
         [SerializeField] RectTransform m_perfectHitBox;
         [SerializeField] RectTransform m_goodHitBox;
         [SerializeField] RectTransform m_bar;
+        [SerializeField] TextMeshProUGUI m_textNotif;
 
         void OnEnable()
         {
@@ -36,19 +38,36 @@ namespace BalapEgrang.Player
         }
 
 
+        IEnumerator ShowingText(string text)
+        {
+            m_textNotif.gameObject.SetActive(true);
+            m_textNotif.text = text;
+
+            yield return new WaitForSeconds(1);
+            m_textNotif.text = "";
+            m_textNotif.gameObject.SetActive(false);
+
+        }
         void CheckMatch()
         {
-            if (m_isWait) return;
+            if (!m_player.MovementBehaviour.IsMoveAllowed || m_isWait) return;
             m_isWait = true;
             if (RectTransformExtensions.Overlaps(m_bar, m_perfectHitBox))
             {
 
                 m_player.MovementBehaviour.Move(MoveType.PERFECT);
+                StartCoroutine(ShowingText(MoveType.PERFECT.ToString()));
             }
             else if (RectTransformExtensions.Overlaps(m_bar, m_goodHitBox))
             {
 
                 m_player.MovementBehaviour.Move(MoveType.GOOD);
+                StartCoroutine(ShowingText(MoveType.GOOD.ToString()));
+            }
+            else
+            {
+                StartCoroutine(ShowingText("FAIL"));
+                m_player.DamageBehaviour.Crash(m_player.transform);
             }
 
         }
@@ -59,8 +78,6 @@ namespace BalapEgrang.Player
             Rect rect2 = new(two.localPosition.x, two.localPosition.y, two.rect.width, two.rect.height);
 
 
-            Debug.Log("bar " + rect1);
-            Debug.Log("box" + rect2);
             return rect2.Overlaps(rect1, true);
         }
 

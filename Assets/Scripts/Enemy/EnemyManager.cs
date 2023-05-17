@@ -11,7 +11,8 @@ namespace Enemy
         MOVING,
         TURNING,
         CRASHED,
-        DECISING,
+        TURN_DECISING,
+        MOVE_DECISING,
         FASTER,
 
     }

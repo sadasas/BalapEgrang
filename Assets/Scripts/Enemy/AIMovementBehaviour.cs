@@ -11,6 +11,7 @@ namespace Enemy
         float m_speed;
         float m_turnRange;
         float m_turnSpeed;
+        float m_countdownMove;
         //faster ability
         float m_timeFaster;
         float m_speedIncrease;
@@ -18,13 +19,13 @@ namespace Enemy
         AIData m_data;
 
 
-        public bool IsTurning { get; private set; } = false;
         public Coroutine Coroutine { get; private set; }
 
-        public AIMovementBehaviour(Transform transform, float turnRange, float turnSpeed, AIData data, float speed, float timeFaster, float speedIncrease, AIAnimationBehaviour animationBehaviour)
+        public AIMovementBehaviour(Transform transform, float turnRange, float turnSpeed, AIData data, float speed, float timeFaster, float speedIncrease, AIAnimationBehaviour animationBehaviour, float countdownMove)
         {
             m_transform = transform;
             m_speed = speed;
+            m_countdownMove = countdownMove;
             m_turnRange = turnRange;
             m_turnSpeed = turnSpeed;
             m_data = data;
@@ -42,23 +43,57 @@ namespace Enemy
         }
         public void Move()
         {
-            m_animationBehaviour.Walk();
-            m_transform.Translate((m_transform.forward * m_speed) * Time.deltaTime, Space.World);
+            if (Coroutine != null) return;
+            Coroutine = m_gameObject.StartCoroutine(Moving());
         }
 
         public void Turn(float dirX)
         {
-            IsTurning = true;
+            if (Coroutine != null)
+            {
+                m_animationBehaviour.ForceStopAnim();
+                m_gameObject.StopCoroutine(Coroutine);
+            }
             Coroutine = m_gameObject.StartCoroutine(Turning(dirX));
         }
 
         public void Idle()
         {
             m_animationBehaviour.Idle();
+            if (Coroutine != null) m_gameObject.StopCoroutine(Coroutine);
         }
-        IEnumerator Turning(float dirX)
+
+        public void ForceStopMovement()
         {
 
+            if (Coroutine != null)
+            {
+                m_gameObject.StopCoroutine(Coroutine);
+
+                m_animationBehaviour.ForceStopAnim();
+                Coroutine = null;
+            }
+        }
+
+        IEnumerator Moving()
+        {
+            var countDown = m_countdownMove;
+            m_animationBehaviour.Walk();
+            while (countDown > 0)
+            {
+                countDown -= Time.deltaTime;
+                m_transform.Translate((Vector3.forward * m_speed) * Time.deltaTime, Space.World);
+                yield return null;
+
+            }
+
+            Coroutine = null;
+            m_data.State = AIState.MOVE_DECISING;
+        }
+
+        IEnumerator Turning(float dirX)
+        {
+            m_data.State = AIState.TURNING;
             m_animationBehaviour.Jump(true);
             var nextPos = new Vector3(m_transform.position.x + dirX * m_turnRange, m_transform.position.y, m_transform.position.z + 0.5f);
             if (dirX > 0)
@@ -90,8 +125,7 @@ namespace Enemy
             }
             Coroutine = null;
             m_animationBehaviour.Jump(false);
-            m_data.State = AIState.MOVING;
-            IsTurning = false;
+            m_data.State = AIState.MOVE_DECISING;
 
 
 

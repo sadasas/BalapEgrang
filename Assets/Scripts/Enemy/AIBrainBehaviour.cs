@@ -17,6 +17,7 @@ namespace Enemy
         AIData m_data;
         Coroutine m_coroutine;
         bool isDecided = false;
+        bool isLastStateCrash = false;
         MonoBehaviour m_gameObject;
 
         public AIBrainBehaviour(float rayLength, LayerMask layerMask, AILevel brain, AIData data, Transform transform, AIDamageBehaviour damageBehaviour, AIMovementBehaviour movementBehaviour, MonoBehaviour gameObject, float rayheight)
@@ -39,6 +40,7 @@ namespace Enemy
 
         public void Update()
         {
+            if (m_data.State == AIState.CRASHED && !isLastStateCrash) isLastStateCrash = true;
             m_rayStartPoin = m_gameObject.GetComponent<Collider>().bounds.center;
         }
 
@@ -48,21 +50,23 @@ namespace Enemy
             Gizmos.DrawLine(m_transform.position + Vector3.up * m_rayheight, (m_transform.position + Vector3.up * m_rayheight) + m_transform.forward * m_rayLength);
         }
 
-        public void SolveCTE(GameObject obstacle)
+        public void SolveMatchBar(Transform pos)
         {
-            m_coroutine = m_gameObject.StartCoroutine(SolvingCTE(obstacle));
+            if (m_coroutine != null) return;
+            m_coroutine = m_gameObject.StartCoroutine(SolvingCTE(pos));
         }
         public void ScanBlockObstacle()
         {
 
             if (isDecided) return;
+
             if (Physics.Raycast(m_transform.position + Vector3.up * m_rayheight, m_transform.forward, m_rayLength, m_layerMask))
             {
 
-
-                if (MakeDecision(0, m_brain.DecisionVarian) == 0)
+                if (MakeDecision(0, m_brain.DecisionVarian) == 0 || isLastStateCrash)
                 {
-                    m_data.State = AIState.TURNING;
+                    isLastStateCrash = false;
+                    TurnDecision();
                 }
                 isDecided = true;
 
@@ -78,7 +82,7 @@ namespace Enemy
 
         public void TurnDecision()
         {
-            if (m_movementBehaviour.IsTurning) return;
+            m_data.State = AIState.TURN_DECISING;
 
             if (m_data.CurrentPos == Pos.RIGHT)
             {
@@ -111,8 +115,9 @@ namespace Enemy
 
         }
 
-        IEnumerator SolvingCTE(GameObject obstacle)
+        IEnumerator SolvingCTE(Transform currentPos)
         {
+            var decision = MakeDecision(0, m_brain.DecisionVarian);
             var countDown = (float)MakeDecision((int)m_brain.DecisionMinCost, (int)m_brain.DecisionMaxCost);
             var pos = new Vector3(m_transform.position.x, m_transform.position.y, m_transform.position.z);
             while (countDown > 0)
@@ -121,17 +126,15 @@ namespace Enemy
                 countDown -= Time.deltaTime;
                 yield return null;
             }
-            if (MakeDecision(0, m_brain.DecisionVarian) != 0)
+            if (decision != 0 && !isLastStateCrash)
             {
-                m_damageBehaviour.Crash(obstacle);
+                isLastStateCrash = true;
+                m_damageBehaviour.Crash(currentPos);
             }
             else
             {
-
                 ///if collapse ?
                 m_data.State = AIState.MOVING;
-                m_movementBehaviour.IncreaseSpeed();
-
             }
             m_coroutine = null;
 
