@@ -21,7 +21,7 @@ namespace Enemy
 
 
         [Header("Movement Setting")]
-        [SerializeField] float m_speed;
+        [SerializeField] float m_countdownMove;
         [SerializeField] float m_respawnDelay;
         [SerializeField] int m_respawnPosDis;
         [SerializeField] float m_turnSpeed;
@@ -48,7 +48,7 @@ namespace Enemy
             m_data ??= new();
             m_animationBehaviour = new(GetComponent<Animator>(), m_walkLerpTime);
             DamageBehaviour = new(m_respawnDelay, m_respawnPosDis, transform, m_data, m_animationBehaviour);
-            m_movementBehaviour = new(transform, m_turnRange, m_turnSpeed, m_data, m_speed, m_timeFaster, m_speedIncrease, m_animationBehaviour);
+            m_movementBehaviour = new(transform, m_turnRange, m_turnSpeed, m_data, Brain.Speed, m_timeFaster, m_speedIncrease, m_animationBehaviour, m_countdownMove);
             m_brainBehaviour = new(m_rayLength, m_obstacleLayer, Brain, m_data, transform, DamageBehaviour, m_movementBehaviour, this, m_rayHeight);
         }
 
@@ -62,16 +62,18 @@ namespace Enemy
                     m_movementBehaviour.Idle();
                     break;
                 case AIState.CRASHED:
+                    m_movementBehaviour.ForceStopMovement();
                     break;
                 case AIState.MOVING:
                     m_movementBehaviour.Move();
                     m_brainBehaviour.ScanBlockObstacle();
                     break;
-                case AIState.TURNING:
-                    m_brainBehaviour.TurnDecision();
+                case AIState.TURN_DECISING:
                     break;
-                case AIState.DECISING:
+                case AIState.MOVE_DECISING:
                     m_movementBehaviour.Idle();
+                    m_brainBehaviour.SolveMatchBar(transform);
+                    m_brainBehaviour.ScanBlockObstacle();
                     break;
                 default:
                     break;
@@ -82,12 +84,6 @@ namespace Enemy
         {
             m_brainBehaviour.OnDrawGizmos();
 
-        }
-
-        public void OnCTETriggered(GameObject obstacle)
-        {
-            m_data.State = AIState.DECISING;
-            m_brainBehaviour.SolveCTE(obstacle);
         }
 
 
@@ -103,7 +99,7 @@ namespace Enemy
 
         public void StartRace()
         {
-            m_data.State = AIState.MOVING;
+            m_data.State = AIState.MOVE_DECISING;
         }
 
         public void WaitStart(Pos currentPos)

@@ -11,7 +11,8 @@ namespace Enemy
         MOVING,
         TURNING,
         CRASHED,
-        DECISING,
+        TURN_DECISING,
+        MOVE_DECISING,
         FASTER,
 
     }
@@ -29,9 +30,10 @@ namespace Enemy
         {
             for (int i = 0; i < max_EnemySpawned; i++)
             {
+                var parent = GameObject.FindGameObjectWithTag("RacersParent").transform;
                 var level = StageManager.s_Instance.StageSelected.Level;
                 var guid = $"AI{i}";
-                var enemy = Instantiate(m_playableEnemy).GetComponent<AIController>();
+                var enemy = Instantiate(m_playableEnemy, parent).GetComponent<AIController>();
                 enemy.ID = guid;
                 enemy.Brain = level;
                 m_enemys.Add(enemy);

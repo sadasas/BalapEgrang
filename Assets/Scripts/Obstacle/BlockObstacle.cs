@@ -23,12 +23,12 @@ public class BlockObstacle : MonoBehaviour
             player.DamageBehaviour.Crash(transform);
             player.Reposition(m_pos);
 
-            RaceManager.s_Instance.RacerCrashed(player.GetComponent<IRacer>());
         }
         else if (other.CompareTag("Enemy"))
         {
             var enemy = other.transform.GetComponent<AIController>();
-            enemy.DamageBehaviour.Crash(gameObject);
+            enemy.DamageBehaviour.Crash(transform);
+
             RaceManager.s_Instance.RacerCrashed(enemy.GetComponent<IRacer>());
         }
     }

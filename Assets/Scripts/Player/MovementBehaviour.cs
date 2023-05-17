@@ -10,6 +10,12 @@ namespace Player
         RIGHT
     }
 
+    public enum MoveType
+    {
+        PERFECT,
+        GOOD
+    }
+
     public class MovementBehaviour
     {
         PlayerDataState m_dataState;
@@ -19,12 +25,17 @@ namespace Player
         IInputCallback m_inputCallback;
         Coroutine m_currentCoro;
         bool m_isTurning;
+        MoveType m_currentTypeMove;
 
         float m_distanceMove;
+        float m_countdownMove;
+        float m_perfectMove;
+        float m_goodMove;
         float m_speed;
+        float m_defaultSpeed;
+        float m_acceleration;
         float m_turnRange;
         float m_turnSpeed;
-        float m_countdownMove;
 
         public bool IsMoveAllowed = true;
 
@@ -32,31 +43,29 @@ namespace Player
             Transform player,
             IInputCallback inputCallback,
             float speed,
+            float acceleration,
+                        float distanceMove,
             float turnSpeed,
             float turnRange,
             PlayerAnimationBehaviour animationBehaviour,
-
-            PlayerDataState dataState,
-            float distanceMove)
+            PlayerDataState dataState
+            )
         {
             m_player = player;
             m_mono = player.GetComponent<MonoBehaviour>();
             m_inputCallback = inputCallback;
+            m_defaultSpeed = speed;
             m_speed = speed;
+            m_acceleration = acceleration;
+            m_distanceMove = distanceMove;
             m_turnSpeed = turnSpeed;
 
+
             m_inputCallback.OnSwipe += Turn;
-            m_inputCallback.OnRelease += () =>
-            {
-                if (!IsMoveAllowed) return;
-                if (m_currentCoro != null) m_countdownMove = distanceMove;
-                else
-                    m_currentCoro = m_mono.StartCoroutine(Moving());
-            };
             m_turnRange = turnRange;
             m_animationBehaviour = animationBehaviour;
             m_dataState = dataState;
-            m_distanceMove = distanceMove;
+
         }
 
         public void Update()
@@ -77,17 +86,17 @@ namespace Player
             }
         }
 
-        public void IncreaseSpeed(int speed)
+        void IncreaseSpeed()
         {
 
             m_animationBehaviour.Faster();
-            m_speed = m_speed * speed;
+            m_speed = m_speed * m_acceleration;
         }
 
-        public void DecreaseSpeed(int speed)
+        void DecreaseSpeed()
         {
             m_animationBehaviour.ResetSpeed();
-            m_speed = m_speed / speed;
+            m_speed = m_defaultSpeed;
         }
 
 
@@ -103,9 +112,43 @@ namespace Player
         }
 
 
+        public void Move(MoveType moveType)
+        {
+
+            if (!IsMoveAllowed) return;
+            m_currentTypeMove = moveType;
+            if (m_currentCoro != null)
+            {
+                m_countdownMove += m_distanceMove;
+                if (moveType == MoveType.PERFECT)
+                {
+                    if (m_speed == m_defaultSpeed)
+                    {
+                        IncreaseSpeed();
+                    }
+
+                }
+                else
+                {
+                    DecreaseSpeed();
+                }
+
+            }
+            else
+            {
+                if (moveType == MoveType.GOOD && m_speed > m_defaultSpeed) m_speed = m_defaultSpeed;
+                m_countdownMove = m_distanceMove;
+                m_currentCoro = m_mono.StartCoroutine(Moving());
+            }
+
+        }
         IEnumerator Moving()
         {
-            m_countdownMove = m_distanceMove;
+
+            if (m_currentTypeMove == MoveType.PERFECT)
+            {
+                IncreaseSpeed();
+            }
             m_dataState.State = PlayerState.WALKING;
             m_animationBehaviour.Walk();
             while (m_countdownMove > 0)
@@ -115,12 +158,16 @@ namespace Player
                 yield return null;
 
             }
+            if (m_speed > m_defaultSpeed)
+            {
+                DecreaseSpeed();
+            }
             m_currentCoro = null;
             m_dataState.State = PlayerState.IDLE;
         }
 
 
-        void Turn(Vector3 input)
+        void Turn(Vector2 input)
         {
             if (!IsMoveAllowed || m_isTurning) return;
 
@@ -128,7 +175,7 @@ namespace Player
             if (m_currentCoro != null)
             {
                 m_mono.StopCoroutine(m_currentCoro);
-                Idle();
+                m_animationBehaviour.ForceStopAllAnimation();
             }
             m_dataState.State = PlayerState.TURNING;
             var dir = (input.x < 0 ? Pos.LEFT : Pos.RIGHT);
@@ -137,17 +184,19 @@ namespace Player
             if (dir == Pos.RIGHT && m_dataState.CurrentPost != Pos.RIGHT)
             {
                 nextPosEnum = m_dataState.CurrentPost == Pos.CENTER ? Pos.RIGHT : Pos.CENTER;
-                m_currentCoro = m_mono.StartCoroutine(Turning(nextPosEnum, m_turnRange));
+                m_currentCoro = m_mono.StartCoroutine(Turning(nextPosEnum, input.x));
             }
             else if (dir == Pos.LEFT && m_dataState.CurrentPost != Pos.LEFT)
             {
                 nextPosEnum = m_dataState.CurrentPost == Pos.CENTER ? Pos.LEFT : Pos.CENTER;
-                m_currentCoro = m_mono.StartCoroutine(Turning(nextPosEnum, -m_turnRange));
+                m_currentCoro = m_mono.StartCoroutine(Turning(nextPosEnum, input.x));
             }
         }
 
-        IEnumerator Turning(Pos nextPosEnum, float range)
+        IEnumerator Turning(Pos nextPosEnum, float xdir)
         {
+
+            var range = xdir < 0 ? -2.5f : 2.5f;
             m_isTurning = true;
             m_animationBehaviour.Jump(true);
             var nextPos = new Vector3(m_player.position.x + range, m_player.position.y, m_player.position.z + 0.5f);

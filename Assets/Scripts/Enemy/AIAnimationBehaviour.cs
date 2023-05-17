@@ -18,9 +18,7 @@ namespace Enemy
 
         public void Walk()
         {
-            var cwv = m_animator.GetFloat("Movement");
-            var val = Mathf.Lerp(cwv, 1, m_walkLerpTime);
-            m_animator.SetFloat("Movement", val);
+            m_animator.SetBool("IsMove", true);
         }
 
         public void Jump(bool isJump)
@@ -38,19 +36,21 @@ namespace Enemy
             m_animator.speed = 1;
         }
 
+
+        public void ForceStopAnim()
+        {
+
+            m_animator.SetBool("IsMove", false);
+            m_animator.SetBool("IsJump", false);
+        }
         public void Idle()
         {
-            var cwv = m_animator.GetFloat("Movement");
-            if (cwv > 0.0f)
-            {
-                var val = Mathf.Lerp(cwv, 0, m_walkLerpTime);
-                m_animator.SetFloat("Movement", val);
-            }
+            m_animator.SetBool("IsMove", false);
         }
 
         public void Crash()
         {
-            m_animator.SetFloat("Movement", 0);
+            m_animator.SetBool("IsMove", false);
             m_animator.SetTrigger("IsCrash");
         }
 

@@ -16,10 +16,10 @@ MonoBehaviour:
   characterDisplay: {fileID: 9041821147190965791, guid: f41a096d750ebac4f98ca442a8cf884c, type: 3}
   characterPlayable: {fileID: 9041821147190965791, guid: 2d46e0cd7be887c479b6bfa32401411c, type: 3}
   Speed: 1
-  Acceleration: 0
+  Acceleration: 2
   TurnSpeed: 0.2
   TurnRange: 2.9
-  DistanceMove: 1
+  DistanceMove: 1.2
   RespawnPosDis: 1
   MaxPushVal: 2
   AbilityTime: 4

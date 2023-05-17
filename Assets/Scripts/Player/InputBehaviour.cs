@@ -5,22 +5,19 @@ namespace Player
 {
     public class InputBehaviour : IInputCallback
     {
-        float m_movePressTime = 0;
-        float m_turnTreshold;
         float m_turnMinLength;
-        bool m_isMoved;
-        private Vector2 tdir;
+        Vector2 m_touchStart;
+        Vector2 m_touchEnd;
+        Vector2 m_touchDir;
 
-        public InputBehaviour(float turnTreshold, float turnMinLength)
+        public InputBehaviour(float turnMinLength)
         {
-            m_turnTreshold = turnTreshold;
-            m_movePressTime = m_turnTreshold;
             m_turnMinLength = turnMinLength;
         }
 
         public event Action OnHold;
         public event Action OnTap;
-        public event Action<Vector3> OnSwipe;
+        public event Action<Vector2> OnSwipe;
         public event Action OnRelease;
 
         public void OnUpdate()
@@ -31,38 +28,32 @@ namespace Player
 
             var t = Input.GetTouch(0);
 
-            if (t.phase == TouchPhase.Stationary)
+            if (t.phase == TouchPhase.Began)
             {
-                if (m_movePressTime > 0)
-                    m_movePressTime -= Time.deltaTime;
-                OnHold?.Invoke();
+                OnTap?.Invoke();
+                m_touchStart = t.position;
+                m_touchEnd = t.position;
             }
             else if (t.phase == TouchPhase.Moved)
             {
-                m_isMoved = true;
-                tdir = t.deltaPosition.normalized;
-            }
-            else if (t.phase == TouchPhase.Began)
-            {
-                OnTap?.Invoke();
+                m_touchEnd = t.position;
+                m_touchDir = t.deltaPosition.normalized;
             }
             else if (t.phase == TouchPhase.Ended)
             {
-                if (!m_isMoved)
+                m_touchEnd = t.position;
+
+                var distanceTouch = Mathf.Abs(Vector2.Distance(m_touchStart, m_touchEnd));
+
+                if (distanceTouch < m_turnMinLength)
                     OnRelease?.Invoke();
                 else
                 {
 
-                    if (m_movePressTime <= 0 || MathF.Abs(tdir.x) > m_turnMinLength || MathF.Abs(tdir.y) < 0.3)
-                    {
-                        m_movePressTime = m_turnTreshold;
-                        OnSwipe?.Invoke(tdir);
-
-                    }
+                    OnSwipe?.Invoke(m_touchDir);
 
                 }
 
-                m_isMoved = false;
             }
         }
     }

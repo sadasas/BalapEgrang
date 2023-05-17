@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Easy
   m_EditorClassIdentifier: 
   DecisionVarian: 3
-  DecisionMinCost: 4
-  DecisionMaxCost: 7
+  DecisionMinCost: 1
+  DecisionMaxCost: 2
+  Speed: 3

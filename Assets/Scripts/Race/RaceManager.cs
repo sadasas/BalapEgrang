@@ -1,4 +1,6 @@
 ﻿using Player;
+using BalapEgrang.Player;
+using BalapEgrang.Sound;
 using System.Collections;
 using System.Collections.Generic;
 using UI;
@@ -206,6 +208,7 @@ namespace Race
             var countDown = 3;
             while (countDown > 0)
             {
+                SoundManager.s_Instance.PlaySFX(SFXType.COUNTDOWN);
                 countDownHandler.gameObject.SetActive(true);
                 countDownHandler.UpdateCountDown(countDown.ToString());
                 countDown--;
@@ -217,6 +220,8 @@ namespace Race
             countDownHandler.UpdateCountDown("GO!!");
             yield return new WaitForSeconds(0.7f);
             UIManager.s_Instance.DisableHUD(HUDType.COUNTDOWN_START);
+            UIManager.s_Instance.ForceHUD(HUDType.RANDOM_BAR);
+            UIManager.s_Instance.GetHUD(HUDType.RANDOM_BAR).GetComponent<MatchBarUIHandler>().SetPlayer(m_racers["PLAYER"].GameObject);
 
             s_State = RaceState.PLAYING;
             foreach (var racer in m_racers)
@@ -232,8 +237,9 @@ namespace Race
             var statisticPlayerHUD = UIManager.s_Instance.GetHUD(HUDType.STATISTIC_PLAYER_RACE_FINISHED).GetComponent<StatisticPlayerHandlerUI>();
             statisticPlayerHUD.gameObject.SetActive(true);
             var dataRacePlayer = m_racers["PLAYER"];
-
+            if (dataRacePlayer.Rank == 1) SoundManager.s_Instance.PlaySFX(SFXType.WIN);
             var rating = StageManager.s_Instance.CalculateRating(dataRacePlayer.Rank, dataRacePlayer.Time);
+
             statisticPlayerHUD.UpdateText(rating, dataRacePlayer.Rank, dataRacePlayer.Time, dataRacePlayer.Respawned
             );
 

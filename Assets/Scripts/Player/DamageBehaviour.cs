@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using BalapEgrang.Sound;
+using Race;
+using UnityEngine;
 
 namespace Player
 {
@@ -6,7 +8,7 @@ namespace Player
     {
         PlayerDataState m_dataState;
         Transform m_player;
-        Transform m_obstacle;
+        Transform m_crashPoint;
         float m_respawnPosDis;
         MovementBehaviour m_movementBehaviour;
         PlayerAnimationBehaviour m_animationBehaviour;
@@ -25,13 +27,16 @@ namespace Player
             };
         }
 
-        public void Crash(Transform obstacle)
+        public void Crash(Transform crashPoint)
         {
             m_movementBehaviour.IsMoveAllowed = false;
             m_movementBehaviour.ForceStopMovement();
             m_dataState.State = PlayerState.CRASHING;
-            m_obstacle = obstacle;
+            m_crashPoint = crashPoint;
 
+            SoundManager.s_Instance.PlaySFX(SFXType.PLAYER_FALL);
+
+            RaceManager.s_Instance.RacerCrashed(m_player.GetComponent<IRacer>());
 
             m_animationBehaviour.Crash();
 
@@ -39,7 +44,8 @@ namespace Player
 
         public void Respawn()
         {
-            var pos = new Vector3(m_player.position.x, m_player.position.y, m_obstacle.position.z + m_respawnPosDis);
+
+            var pos = new Vector3(m_player.position.x, m_player.position.y, m_crashPoint.position.z + m_respawnPosDis);
             m_player.transform.position = pos;
             m_movementBehaviour.IsMoveAllowed = true;
         }

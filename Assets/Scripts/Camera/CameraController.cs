@@ -3,16 +3,17 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public bool IsTrackAllowed = true;
 
     [SerializeField] float m_smoothDamp;
     [SerializeField] float m_offsetX;
 
-    public Transform Player { get; set; }
 
+    public Transform Player { get; set; }
 
     void LateUpdate()
     {
-       if(Player) TrackPlayer();
+        if (Player && IsTrackAllowed) TrackPlayer();
 
     }
     void TrackPlayer()

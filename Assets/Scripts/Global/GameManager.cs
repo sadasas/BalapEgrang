@@ -1,5 +1,6 @@
 ﻿using Enemy;
 using Player;
+using BalapEgrang.Sound;
 using Race;
 using System.Collections;
 using UI;
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
     EnemyManager m_EnemyManager;
     StageManager m_stageManager;
     TutorialManager m_tutorialManager;
+    SoundManager m_soundManager;
 
     [SerializeField] GameObject m_playerManagerPrefab;
     [SerializeField] GameObject m_stageManagerPrefab;
@@ -39,7 +41,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject m_raceManagerPrefab;
     [SerializeField] GameObject m_enemyManagerPrefab;
     [SerializeField] GameObject m_tutorialManagerPrefab;
-
+    [SerializeField] GameObject m_soundManagerPrefab;
 
     void Awake()
     {
@@ -53,7 +55,6 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
         {
             PlayerPrefs.SetInt("Tutorial", 0);
-            Debug.Log("tutoriel reset");
         }
     }
 
@@ -68,8 +69,11 @@ public class GameManager : MonoBehaviour
 
         InitPlayerManager();
         InitUIManager();
+        InitSoundManager();
 
     }
+
+
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         switch (scene.name)
@@ -93,12 +97,12 @@ public class GameManager : MonoBehaviour
     public void LoadScene(SceneType type)
     {
         var sceneName = "";
-        if (type == SceneType.STAGE_1)
-        {
-            var tutorial = PlayerPrefs.GetInt("Tutorial");
-            if (tutorial == 0)
-                sceneName = "Tutorial";
-        }
+        // if (type == SceneType.STAGE_1)
+        // {
+        //     var tutorial = PlayerPrefs.GetInt("Tutorial");
+        //     if (tutorial == 0)
+        //         sceneName = "Tutorial";
+        // }
 
         if (sceneName == "")
         {
@@ -109,6 +113,7 @@ public class GameManager : MonoBehaviour
                 SceneType.CHOOSE_STAGE => "ChooseStage",
                 SceneType.STAGE_1 => "Stage1",
                 SceneType.STAGE_2 => "Stage2",
+                _ => ""
             };
 
         }
@@ -152,6 +157,13 @@ public class GameManager : MonoBehaviour
 
         m_playerManager = Instantiate(m_playerManagerPrefab).GetComponent<PlayerManager>();
     }
+
+
+    private void InitSoundManager()
+    {
+        m_soundManager = Instantiate(m_soundManagerPrefab).GetComponent<SoundManager>();
+    }
+
 
     void InitUIManager()
     {

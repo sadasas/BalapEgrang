@@ -21,13 +21,10 @@ namespace Player
         PlayerDataState m_dataState;
         public InputBehaviour InputBehaviour;
         public MovementBehaviour MovementBehaviour;
-        public AbilityBehaviour AbilityBehaviour;
         PlayerAnimationBehaviour m_animatonBehaviour;
         public DamageBehaviour DamageBehaviour { get; private set; }
 
         [Header("Input Setting")]
-        [SerializeField]
-        float m_turnTreshold;
         [SerializeField]
         float m_turnMinLength;
 
@@ -36,16 +33,15 @@ namespace Player
         float m_walkLerpTime;
 
         public string ID { get; set; }
-        public PlayerType Type;
+        public PlayerType Type { get; set; }
 
         void Start()
         {
             m_dataState ??= new();
             m_animatonBehaviour = new(m_walkLerpTime, this.GetComponent<Animator>(), m_dataState);
-            InputBehaviour = new(m_turnTreshold, m_turnMinLength);
-            MovementBehaviour = new(transform, InputBehaviour, Type.Speed, Type.TurnSpeed, Type.TurnRange, m_animatonBehaviour, m_dataState, Type.DistanceMove);
+            InputBehaviour = new(m_turnMinLength);
+            MovementBehaviour = new(transform, InputBehaviour, Type.Speed, Type.Acceleration, Type.DistanceMove, Type.TurnSpeed, Type.TurnRange, m_animatonBehaviour, m_dataState);
             DamageBehaviour = new(transform, Type.RespawnPosDis, MovementBehaviour, m_animatonBehaviour, m_dataState);
-            AbilityBehaviour = new(Type.MaxPushVal, this, Type.AbilityTime, MovementBehaviour);
         }
 
         void Update()

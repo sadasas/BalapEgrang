@@ -11,7 +11,7 @@ namespace Enemy
         Transform m_transform;
         AIData m_data;
         MonoBehaviour m_gameObject;
-        Transform m_obstacle;
+        Transform m_currentPos;
 
         public event Action OnRespawn;
         public AIDamageBehaviour(float respawnDelay, float respawnPosDis, Transform transform, AIData data, AIAnimationBehaviour animationBehaviour)
@@ -28,20 +28,20 @@ namespace Enemy
                 if (state == AIState.CRASHED) Respawn();
             };
         }
-        public void Crash(GameObject obstacle)
+        public void Crash(Transform currenPos)
         {
-            
-            m_obstacle = obstacle.transform;
+            if (m_data.State == AIState.TURNING) return;
+            m_currentPos = currenPos;
             m_data.State = AIState.CRASHED;
             m_animationBehaviour.Crash();
         }
 
         void Respawn()
         {
-            var pos = new Vector3(m_transform.position.x, m_transform.position.y, m_obstacle.position.z + m_respawnPosDis);
+            var pos = new Vector3(m_transform.position.x, m_transform.position.y, m_currentPos.position.z + m_respawnPosDis);
             m_transform.position = pos;
-            m_data.State = AIState.MOVING;
             OnRespawn?.Invoke();
+            m_data.State = AIState.MOVE_DECISING;
         }
 
 
