@@ -1,0 +1,29 @@
+name: Build Unity Project
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build for Windows
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache Unity
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/unity3d
+          key: ${{ runner.os }}-unity
+
+      - name: Build Unity project
+        uses: game-ci/unity-builder@v4
+        with:
+          targetPlatform: StandaloneWindows64
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
