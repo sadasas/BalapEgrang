@@ -56,9 +56,9 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          targetPlatform: Android
           unityVersion: 2018.4.36f1
           allowDirtyBuild: true
+          customParameters: '-quit -batchmode -nographics -executeMethod SetAndroid16Compatibility'
 
       # Upload build output
       - uses: actions/upload-artifact@v4
