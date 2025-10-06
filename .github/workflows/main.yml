@@ -57,7 +57,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: Android
-          unityVersion: auto
+          unityVersion: 2018.4.36f1
           allowDirtyBuild: true
 
       # Upload build output
