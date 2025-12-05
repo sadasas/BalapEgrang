@@ -78,40 +78,46 @@ public class ChooseCharacterHandlerUI : MonoBehaviour
         return true;
     }
 
-    void RotateCharacterSelection()
+   void RotateCharacterSelection()
+{
+    if (Input.touchCount == 0) return;
+
+    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    var touch = Input.GetTouch(0);
+
+    switch (touch.phase)
     {
-        if (Input.touchCount == 0) return;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        var touch = Input.GetTouch(0);
-        switch (touch.phase)
-        {
-            case TouchPhase.Began:
-                if (Physics.Raycast(ray, m_characterLayer))
-                {
-                    m_startPosition = touch.position.x;
-                    isSelected = true;
-                }
-                break;
-            case TouchPhase.Moved:
-                if (!isSelected) return;
-                if (m_startPosition > touch.position.x)
-                {
-                    m_currentObj.transform.Rotate(Vector3.up, m_turnSpeed * Time.deltaTime);
-                }
-                else if (m_startPosition < touch.position.x)
-                {
+        case TouchPhase.Began:
+            if (Physics.Raycast(ray, m_characterLayer))
+            {
+                m_startPosition = touch.position.x;
+                isSelected = true;
+            }
+            break;
 
-                    m_currentObj.transform.Rotate(Vector3.up, -m_turnSpeed * Time.deltaTime);
-                }
-                break;
-            case TouchPhase.Ended:
-                isSelected = false;
-                break;
-            default:
-                break;
-        }
+        case TouchPhase.Moved:
+            if (!isSelected) return;
 
+            float speed = m_turnSpeed * Time.deltaTime;
+
+            if (m_startPosition > touch.position.x)
+            {
+                // Rotate only on global Y axis
+                m_currentObj.transform.Rotate(0f, speed, 0f, Space.World);
+            }
+            else if (m_startPosition < touch.position.x)
+            {
+                // Rotate only on global Y axis
+                m_currentObj.transform.Rotate(0f, -speed, 0f, Space.World);
+            }
+            break;
+
+        case TouchPhase.Ended:
+            isSelected = false;
+            break;
     }
+}
+
 
     void InitObj()
     {

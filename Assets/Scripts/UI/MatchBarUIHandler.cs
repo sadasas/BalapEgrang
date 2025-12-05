@@ -1,5 +1,6 @@
 using System.Collections;
 using Utility;
+using System;
 using Player;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,11 +39,11 @@ namespace BalapEgrang.Player
         }
 
 
-        IEnumerator ShowingText(string text)
+        IEnumerator ShowingText(string text, Color color = default)
         {
             m_textNotif.gameObject.SetActive(true);
             m_textNotif.text = text;
-
+            m_textNotif.color = color;   // ← Change color here
             yield return new WaitForSeconds(1);
             m_textNotif.text = "";
             m_textNotif.gameObject.SetActive(false);
@@ -50,23 +51,24 @@ namespace BalapEgrang.Player
         }
         void CheckMatch()
         {
+
             if (!m_player.MovementBehaviour.IsMoveAllowed || m_isWait) return;
             m_isWait = true;
             if (RectTransformExtensions.Overlaps(m_bar, m_perfectHitBox))
             {
 
                 m_player.MovementBehaviour.Move(MoveType.PERFECT);
-                StartCoroutine(ShowingText(MoveType.PERFECT.ToString()));
+                StartCoroutine(ShowingText(MoveType.PERFECT.ToString(), Color.green));
             }
             else if (RectTransformExtensions.Overlaps(m_bar, m_goodHitBox))
             {
 
                 m_player.MovementBehaviour.Move(MoveType.GOOD);
-                StartCoroutine(ShowingText(MoveType.GOOD.ToString()));
+                StartCoroutine(ShowingText(MoveType.GOOD.ToString(), Color.white));
             }
             else
             {
-                StartCoroutine(ShowingText("FAIL"));
+                StartCoroutine(ShowingText("FAIL", Color.red));
                 m_player.DamageBehaviour.Crash(m_player.transform);
             }
 

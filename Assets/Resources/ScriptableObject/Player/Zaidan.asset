@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d9b8ec10b4ef043a8499ea99873575, type: 3}
+  m_Name: Zaidan
+  m_EditorClassIdentifier: 
+  Name: Gilang
+  characterDisplay: {fileID: 8066707349117650821, guid: 5220ad6456e25f64ca5e8113afd473a9, type: 3}
+  characterPlayable: {fileID: 2483569801184263277, guid: 19324792bc503454590749e56e4f6955, type: 3}
+  Speed: 2
+  Acceleration: 2.5
+  TurnSpeed: 0.3
+  TurnRange: 2.9
+  DistanceMove: 1.2
+  RespawnPosDis: 1
+  MaxPushVal: 3
+  AbilityTime: 2
+  BgUI: {r: 0.3213875, g: 0.81761, b: 0.75238943, a: 1}
+  BgCharacter: {r: 0.48860797, g: 0.8490566, b: 0.50644654, a: 1}

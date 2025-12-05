@@ -54,6 +54,7 @@ namespace Player
 
         public void OnEndAnimCallback(PlayerState state)
         {
+            Debug.Log("OnEndAnimCallback: " + state);
 
             OnEndAnim?.Invoke(state);
         }

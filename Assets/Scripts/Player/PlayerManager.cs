@@ -48,7 +48,7 @@ namespace Player
         void AddDefaultCharacter()
         {
             m_dataPlayer.CharacterCollections = new();
-            var defaultCharacter = Helper.GetPlayerType("Student");
+            var defaultCharacter = Helper.GetPlayerType("Doni");
             m_dataPlayer.CharacterCollections.Add(defaultCharacter);
 
             SaveDataPlayer();

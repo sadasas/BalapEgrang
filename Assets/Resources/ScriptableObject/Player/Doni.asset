@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8d9b8ec10b4ef043a8499ea99873575, type: 3}
-  m_Name: Teacher
+  m_Name: Doni
   m_EditorClassIdentifier: 
-  Name: Teacher
-  characterDisplay: {fileID: 9041821147190965791, guid: f0e254601a1cb784381655d3fc0d6f52, type: 3}
-  characterPlayable: {fileID: 9041821147190965791, guid: 5581dbd62822db34eaf42dcf51a97914, type: 3}
-  Speed: 1.5
+  Name: Doni
+  characterDisplay: {fileID: 1340189178495225733, guid: a59ef8efbf50dcb4b9bff1b1c7d80843, type: 3}
+  characterPlayable: {fileID: 6240609809723368910, guid: 8edce6c71e72d4e4d9fb205539fa82aa, type: 3}
+  Speed: 1
   Acceleration: 2
-  TurnSpeed: 0.3
+  TurnSpeed: 0.2
   TurnRange: 2.9
   DistanceMove: 1.2
   RespawnPosDis: 1
   MaxPushVal: 2
-  AbilityTime: 2
-  BgUI: {r: 0.48406905, g: 0.9245283, b: 0.5665712, a: 1}
-  BgCharacter: {r: 0.8113208, g: 0.2902507, b: 0.057404764, a: 1}
+  AbilityTime: 4
+  BgUI: {r: 0.8867924, g: 0.3722855, b: 0.3722855, a: 1}
+  BgCharacter: {r: 0.5566038, g: 0.51722145, b: 0.51722145, a: 1}

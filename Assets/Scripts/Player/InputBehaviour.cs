@@ -21,7 +21,10 @@ namespace Player
         public event Action OnRelease;
 
         public void OnUpdate()
-        {
+        {            
+
+
+
             var tc = Input.touchCount;
             if (tc == 0)
                 return;

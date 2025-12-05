@@ -15,4 +15,4 @@ MonoBehaviour:
   DecisionVarian: 3
   DecisionMinCost: 1
   DecisionMaxCost: 2
-  Speed: 3
+  Speed: 2

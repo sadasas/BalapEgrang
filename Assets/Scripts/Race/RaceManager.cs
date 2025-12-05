@@ -129,8 +129,15 @@ namespace Race
 
 
             var id = m_racers.Count;
-            var heigth = newRacer.GetComponent<Collider>().bounds.min.y;
-            newRacer.transform.position = new Vector3(m_startPos[id].position.x, heigth, m_startPos[id].position.z);
+            var col = newRacer.GetComponent<Collider>();
+            var localMinY = col.bounds.center.y - col.bounds.extents.y; // kaki di world
+            var offsetToPivot = newRacer.transform.position.y - localMinY;
+
+            newRacer.transform.position = new Vector3(
+         m_startPos[id].position.x,
+    m_startPos[id].position.y + offsetToPivot,
+    m_startPos[id].position.z
+);
             var racer = newRacer.GetComponent<IRacer>();
 
             PlayerDataRace newData = default;

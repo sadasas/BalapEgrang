@@ -70,9 +70,13 @@ namespace Player
             m_animatonBehaviour.ForceStopAllAnimation();
         }
 
-        public void OnEndAnimation(PlayerState state)
+        public void OnEndAnimation(int state)
         {
-            m_animatonBehaviour.OnEndAnimCallback(state);
+                PlayerState s = (PlayerState)state;
+
+                Debug.Log("ddd " + s);
+
+                m_animatonBehaviour.OnEndAnimCallback(s);
         }
         public void Reposition(Pos repos)
         {
