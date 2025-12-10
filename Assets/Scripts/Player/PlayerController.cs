@@ -74,7 +74,6 @@ namespace Player
         {
                 PlayerState s = (PlayerState)state;
 
-                Debug.Log("ddd " + s);
 
                 m_animatonBehaviour.OnEndAnimCallback(s);
         }

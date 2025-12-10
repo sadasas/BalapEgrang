@@ -70,7 +70,6 @@ namespace Player
 
         public void Update()
         {
-            Debug.Log(m_dataState.State);
             if (m_dataState.State == PlayerState.IDLE) Idle();
 
         }

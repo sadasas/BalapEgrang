@@ -157,6 +157,7 @@ namespace Player
 
         public PlayerController SpawnPlayablePlayer()
         {
+            
 
             var pp = Helper.GetPlayerType(m_dataPlayer.CurrentCharacterSelection).characterPlayable;
             var parent = GameObject.FindGameObjectWithTag("RacersParent").transform;

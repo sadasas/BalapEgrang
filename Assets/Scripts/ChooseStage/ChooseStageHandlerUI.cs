@@ -216,7 +216,6 @@ public class ChooseStageHandlerUI : MonoBehaviour
 
         var quest = stage.Quests[0];
     
-        Debug.Log($"ShowQuest - Stage: {stage.Name}, Quest Description: {quest.Description}, Character Reward: {quest.CharacterReward.Name}");
     
         m_questCollectedHUD.SetActive(false);
         m_questCompletedHUD.SetActive(false);

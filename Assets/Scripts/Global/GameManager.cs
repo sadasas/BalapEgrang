@@ -81,6 +81,7 @@ public class GameManager : MonoBehaviour
         {
             case "Stage1":
             case "Stage2":
+            case "Stage3":
                 StartGame();
                 break;
             case "ChooseStage":
@@ -97,10 +98,12 @@ public class GameManager : MonoBehaviour
 
     public void LoadScene(SceneType type)
     {
+
         var sceneName = "";
         if (type == SceneType.STAGE_1)
         {
             var tutorial = PlayerPrefs.GetInt("Tutorial");
+            Debug.Log("Tutorial value: " + tutorial);
             if (tutorial == 0)
                 sceneName = "Tutorial";
         }
