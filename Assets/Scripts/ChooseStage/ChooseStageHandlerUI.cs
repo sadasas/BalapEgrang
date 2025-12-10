@@ -28,6 +28,7 @@ public class ChooseStageHandlerUI : MonoBehaviour
     [SerializeField] GameObject m_questAvailableHUD;
     [SerializeField] GameObject m_questCompletedHUD;
     [SerializeField] GameObject m_questCollectedHUD;
+     [SerializeField] GameObject m_questEmptyHUD;
 
 
     [Header("Reward Setting")]
@@ -204,9 +205,19 @@ public class ChooseStageHandlerUI : MonoBehaviour
 
     void ShowQuest(Stage stage)
     {
-        if (stage.Quests.Length == 0) return;
-        var quest = stage.Quests[0];
+        if (stage.Quests.Length == 0) {
+            m_questAvailableHUD.SetActive(false);
+            m_questCompletedHUD.SetActive(false);
+            m_questCollectedHUD.SetActive(false);
+            m_questEmptyHUD.SetActive(true);
+            return;
+        }
+        m_questEmptyHUD.SetActive(false);
 
+        var quest = stage.Quests[0];
+    
+        Debug.Log($"ShowQuest - Stage: {stage.Name}, Quest Description: {quest.Description}, Character Reward: {quest.CharacterReward.Name}");
+    
         m_questCollectedHUD.SetActive(false);
         m_questCompletedHUD.SetActive(false);
         m_questAvailableHUD.SetActive(true);

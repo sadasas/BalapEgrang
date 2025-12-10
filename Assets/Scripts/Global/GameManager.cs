@@ -14,7 +14,8 @@ public enum SceneType
     CHOOSE_CHARACTER,
     CHOOSE_STAGE,
     STAGE_1,
-    STAGE_2
+    STAGE_2,
+    STAGE_3,
 }
 public class GameManager : MonoBehaviour
 {
@@ -97,12 +98,12 @@ public class GameManager : MonoBehaviour
     public void LoadScene(SceneType type)
     {
         var sceneName = "";
-        // if (type == SceneType.STAGE_1)
-        // {
-        //     var tutorial = PlayerPrefs.GetInt("Tutorial");
-        //     if (tutorial == 0)
-        //         sceneName = "Tutorial";
-        // }
+        if (type == SceneType.STAGE_1)
+        {
+            var tutorial = PlayerPrefs.GetInt("Tutorial");
+            if (tutorial == 0)
+                sceneName = "Tutorial";
+        }
 
         if (sceneName == "")
         {
@@ -113,6 +114,7 @@ public class GameManager : MonoBehaviour
                 SceneType.CHOOSE_STAGE => "ChooseStage",
                 SceneType.STAGE_1 => "Stage1",
                 SceneType.STAGE_2 => "Stage2",
+                SceneType.STAGE_3 => "Stage3",
                 _ => ""
             };
 
